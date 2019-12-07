@@ -1,44 +1,48 @@
 <!--Navbar -->
-<!--  -->
-<!--Navbar -->
 <nav class="mb-1 navbar navbar-expand-lg navbar-dark nav-custom">
-    <a class="navbar-brand" href="#"><img src="assets/images/st-logo.png" alt=""></a>
+    <!-- logo -->
+    <a class="navbar-brand" href="#"><img class="ml-2" src="assets/images/st-logo.png" alt=""></a>
+    <!-- /.logo -->
+    <!-- Collapse button -->
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-333" aria-controls="navbarSupportedContent-333" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
+    <!-- Collapsible content -->
     <div class="collapse navbar-collapse" id="navbarSupportedContent-333">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="#">Home
+                <a class="nav-link" href="#">Trang chủ
           <span class="sr-only">(current)</span>
         </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Features</a>
+                <a class="nav-link" href="#">Chức năng</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Pricing</a>
             </li>
+            <!-- Dropdown -->
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown
-        </a>
-                <div class="dropdown-menu dropdown-default" aria-labelledby="navbarDropdownMenuLink-333">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <a class="dropdown-item" href="#">Something else here</a>
+                <a class="nav-link dropdown-toggle" id="dropChucNang" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+                <div class="dropdown-menu dropdown-default" aria-labelledby="dropChucNang">
+                    <a class="dropdown-item" href="#">Danh sách lịch</a>
+                    <a class="dropdown-item" href="#">Lấy lịch công tác</a>
+                    <a class="dropdown-item" href="#">Lấy lịch giảng dạy</a>
+                    <a class="dropdown-item" href="#">Lấy lịch thi</a>
+                    <a class="dropdown-item" href="#">Import lịch</a>
                 </div>
             </li>
         </ul>
         <ul class="navbar-nav ml-auto nav-flex-icons">
             <li class="nav-item">
-                <a class="nav-link waves-effect waves-light">
-                    Đăng ký
-                </a>
+                <a routerLink="/auth/register" class="nav-link waves-effect waves-light">
+          Đăng ký
+        </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link waves-effect waves-light">
-                    Đăng nhập
-                </a>
+                <a routerLink="/auth/login" class="nav-link waves-effect waves-light">
+          Đăng nhập
+        </a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -52,5 +56,6 @@
             </li>
         </ul>
     </div>
+    <!-- /.Collapsible content -->
 </nav>
 <!--/.Navbar -->

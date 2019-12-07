@@ -1,3 +1,4 @@
+@import "scss/settings/theme-variables";
 .navbar-brand img {
     height: 50px;
     width: auto;
@@ -9,12 +10,16 @@ nav.nav-custom {
 }
 
 ul.navbar-nav li a {
-    height: 60px;
-    line-height: 60px;
+    height: $header-height;
+    line-height: $header-height;
     padding: 0 15px;
 }
 
 ul.navbar-nav li {
     padding: 0 !important;
     margin: 0;
+}
+
+nav {
+    box-shadow: $card-shadow;
 }

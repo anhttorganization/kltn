@@ -1,0 +1,11 @@
+img#signup_logo {
+  max-width: 150px;
+  margin-top: -35px;
+  top: 0;
+}
+.auth-wrapper .auth-content {
+  width: 650px;
+}
+label.register-title b {
+  font-size: x-large;
+}
