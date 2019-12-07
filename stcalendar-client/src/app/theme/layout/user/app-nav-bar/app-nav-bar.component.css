@@ -1,0 +1,17 @@
+.default-color {
+  background-color: #4099ff !important;
+}
+links ul li.nav-item {
+  line-height: 56px;
+}
+links ul li.nav-item a.nav-link {
+  padding-bottom: 0;
+  padding-top: 0;
+}
+links ul li.nav-item.avatar a.nav-link img {
+  height: 56px;
+  padding: 7px !important;
+}
+nav.navbar {
+  background-color: #4099ff !important;
+}

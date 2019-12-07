@@ -1,0 +1,36 @@
+{
+  "groups": [
+    {
+      "name": "app.security.jwt",
+      "type": "vn.edu.vnua.dse.stcalendar.security.config.JwtSettings",
+      "sourceType": "vn.edu.vnua.dse.stcalendar.security.config.JwtSettings"
+    }
+  ],
+  "properties": [
+    {
+      "name": "app.security.jwt.refresh-token-exp-time",
+      "type": "java.lang.Integer",
+      "description": "{@link JwtToken} can be refreshed during this timeframe.",
+      "sourceType": "vn.edu.vnua.dse.stcalendar.security.config.JwtSettings"
+    },
+    {
+      "name": "app.security.jwt.token-expiration-time",
+      "type": "java.lang.Integer",
+      "description": "{@link JwtToken} will expire after this time.",
+      "sourceType": "vn.edu.vnua.dse.stcalendar.security.config.JwtSettings"
+    },
+    {
+      "name": "app.security.jwt.token-issuer",
+      "type": "java.lang.String",
+      "description": "Token issuer.",
+      "sourceType": "vn.edu.vnua.dse.stcalendar.security.config.JwtSettings"
+    },
+    {
+      "name": "app.security.jwt.token-signing-key",
+      "type": "java.lang.String",
+      "description": "Key is used to sign {@link JwtToken}.",
+      "sourceType": "vn.edu.vnua.dse.stcalendar.security.config.JwtSettings"
+    }
+  ],
+  "hints": []
+}

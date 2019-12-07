@@ -1,0 +1,5 @@
+app.security.jwt:
+  tokenExpirationTime: 60 # Number of minutes
+  refreshTokenExpTime: 600 # Minutes
+  tokenIssuer: http://localhost
+  tokenSigningKey: xm8EV6Hy5RMFK4EEACIDAwQus
