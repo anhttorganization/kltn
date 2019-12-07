@@ -1,0 +1,29 @@
+div#navbar-user-top {
+    background: #4099ff;
+}
+
+img.logo-st {
+    height: 50px;
+    width: auto;
+    display: inline-block;
+    float: left;
+}
+
+div#navbar-user-top ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+div#navbar-user-top ul li {
+    display: inline-block;
+}
+
+div#navbar-user-top ul li a {
+    height: 56px;
+    display: block;
+    line-height: 56px;
+    padding: 0 18px;
+    font-weight: 500;
+    color: white;
+}
