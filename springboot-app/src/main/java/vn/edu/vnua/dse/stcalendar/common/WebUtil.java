@@ -12,11 +12,13 @@ public class WebUtil {
     private static final String CONTENT_TYPE_JSON = "application/json";
 
     public static boolean isAjax(HttpServletRequest request) {
-        return XML_HTTP_REQUEST.equals(request.getHeader(X_REQUESTED_WITH));
+//        return XML_HTTP_REQUEST.equals(request.getHeader(X_REQUESTED_WITH));
+        return true;
     }
 
     public static boolean isAjax(SavedRequest request) {
-        return request.getHeaderValues(X_REQUESTED_WITH).contains(XML_HTTP_REQUEST);
+//        return request.getHeaderValues(X_REQUESTED_WITH).contains(XML_HTTP_REQUEST);
+        return true;
     }
 
     public static boolean isContentTypeJson(SavedRequest request) {

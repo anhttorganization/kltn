@@ -10,6 +10,9 @@ import { MaterialModule } from './material.module';
 import { AppNavBarComponent } from './theme/layout/user/app-nav-bar/app-nav-bar.component';
 import { BreadscrumbComponent } from './theme/shared/components/breadscrumb/breadscrumb.component';
 import { AuthComponent } from './theme/layout/auth/auth.component';
+import { LoginServices } from './services/login.services.ts.service';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -24,9 +27,14 @@ import { AuthComponent } from './theme/layout/auth/auth.component';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MaterialModule
+    MaterialModule,
+    HttpClientModule,
+    ToastrModule.forRoot({
+      timeOut: 3000,
+      positionClass: 'toast-bottom-right'
+    }),
   ],
-  providers: [],
+  providers: [LoginServices],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
