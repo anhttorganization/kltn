@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
 
         // check role
         if (payload.scopes[0] === AppCommon.ROLE_ADMIN) {
-          this.router.navigate(['user']);
+          this.router.navigate(['admin']);
           this.toastr.success("Đăng nhập thành công!", "Success");
         }
         if (payload.scopes[0] === AppCommon.ROLE_USER) {
