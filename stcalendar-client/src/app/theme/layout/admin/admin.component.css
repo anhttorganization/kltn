@@ -1,0 +1,16 @@
+.side-nav.wide.slim {
+  width: 3.75rem !important;
+}
+.side-nav .sidenav-bg:after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding-bottom: 99999px;
+  margin-bottom: -99999px;
+  content: "";
+}

@@ -5,6 +5,7 @@ import { from } from 'rxjs';
 import { AppNavBarComponent } from './theme/layout/user/app-nav-bar/app-nav-bar.component';
 import { UserComponent } from './theme/layout/user/user.component';
 import { AuthComponent } from './theme/layout/auth/auth.component';
+import { AdminComponent } from './theme/layout/admin/admin.component';
 
 const routes: Routes = [
   {
@@ -28,6 +29,19 @@ const routes: Routes = [
         path: 'auth',
         loadChildren: () => import('./pages/authentication/authentication.module').then(module => module.AuthenticationModule)
       }
+    ]
+  },{
+    path: '',
+    component: AdminComponent,
+    children: [
+      {
+        path: 'admin',
+        redirectTo: 'admin/dashboard',
+        pathMatch: 'full'
+      }, {
+        path: 'admin',
+        loadChildren: () => import('./dashboard/dashboard.module').then(module => module.DashboardModule),
+      } ,
     ]
   }
 ];
