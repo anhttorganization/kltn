@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<strings>
+	<string id="st-name">
+		Nhóm ST
+	</string>
+
+	<string id="st-email">
+		stdse@vnua.edu.vn
+	</string>
+
+	<string id="st-website">
+		st-dse.vnua.edu.vn
+	</string>
+
+	<string id="st-website-url">
+		https://st-dse.vnua.edu.vn
+	</string>
+	
+	<string id="fita-website-url">
+		https://fita.vnua.edu.vn
+	</string>
+	
+	<string id="vnua-website-url">
+		https://www.vnua.edu.vn
+	</string>
+	
+	<string id="fita-name-footer">
+		<h1>Khoa CNTT</h1>
+	</string>
+	
+	<string id="vnua-name-footer">
+		Học viện Nông nghiệp Việt Nam
+	</string>
+	
+	<string id="department-name-footer">
+		Bộ môn Công nghệ phần mềm
+	</string>
+	
+	<string id="contact-phone">
+		0912 817 498
+	</string>
+
+ 	<string id="copyright">
+		ST-DSE
+	</string>
+
+	<string id="home-menu">
+		Trang Chủ
+	</string>
+
+	<string id="guide-menu">
+		Hướng Dẫn
+	</string>
+
+	<string id="contact-menu">
+		Liên Hệ
+	</string>
+	
+	<string id="policy-menu">
+		Chính Sách
+	</string>
+
+	<string id="privacy-menu">
+		Quy Định Sử Dụng
+	</string>
+
+	<string id="terms-menu">
+		Bảo Mật Thông Tin
+	</string>
+
+	<string id="login-menu">
+		Đăng nhập
+	</string>
+
+	<string id="register-menu">
+		Đăng ký
+	</string>
+
+	<string id="st-address-contact">
+		Bộ môn Công nghệ phần mềm, Khoa Công nghệ thông tin, Học viện Nông
+		nghiệp Việt Nam
+	</string>
+</strings>

@@ -17,6 +17,7 @@ import vn.edu.vnua.dse.stcalendar.model.Semester;
 import vn.edu.vnua.dse.stcalendar.repository.SemesterRepository;
 import vn.edu.vnua.dse.stcalendar.service.ScheduleService;
 import vn.edu.vnua.dse.stcalendar.service.UserService;
+import vn.edu.vnua.dse.stcalendar.vo.EventDetailVo;
 import vn.edu.vnua.dse.stcalendar.vo.ScheduleCreate;
 import vn.edu.vnua.dse.stcalendar.vo.ScheduleEventsResult;
 
@@ -40,46 +41,58 @@ public class ScheduleServiceImpl implements ScheduleService {
 	}
 
 	@Override
-	public List<GoogleEvent> insert(CalendarApi calendarApi, String calenId, ScheduleCreate scheduleCreate) {
-		
+	public List<EventDetailVo> insert(CalendarApi calendarApi, String calenId, ScheduleCreate scheduleCreate) {
+
 		String semesterId = scheduleCreate.getSemester();
-		List<GoogleEvent> insertedEvents = new ArrayList<GoogleEvent>();
+		List<EventDetailVo> insertedEvents = new ArrayList<EventDetailVo>();
 		Semester semester = semesterRepository.findById(semesterId)
 				.orElseThrow(() -> new CustomException("Không tìm thấy Học kỳ với id " + semesterId));
 
-		ScheduleEventsResult events = SubjectEventDetails.getEventsFromSchedule(scheduleCreate.getStudentId(), semester);
-		
+		ScheduleEventsResult result = SubjectEventDetails.getEventsFromSchedule(scheduleCreate.getStudentId(),
+				semester);
+		insertedEvents = result.getSubjectEvents();
+
 		// Thêm sự kiện môn học
-		for (GoogleEvent event : events.getSubjectEvents()) {
-			insertedEvents.add(calendarApi.insertEvent(calenId, event));
+		for (EventDetailVo eventDetailVo : insertedEvents) {
+			GoogleEvent googleEvent = SubjectEventDetails.toGoogleEvent(eventDetailVo);
+			GoogleEvent insertResult = calendarApi.insertEvent(calenId, googleEvent);
+			if (insertResult == null) {
+				insertedEvents.remove(eventDetailVo);
+			}
 		}
-		
-		// Thêm sự kiện tuần
-		for (String event : events.getWeekEvents()) {
-			insertedEvents.add(calendarApi.insertEvent(calenId, event));
+
+		if (insertedEvents.size() <= 0) {
+			throw new CustomException("Lỗi khi insert lịch");
 		}
 
 		return insertedEvents;
 	}
 
 	@Override
-	public Set<String> insert(String calenId, List<GoogleEvent> events) throws IOException {
-		Set<String> eventIds = new HashSet<>();
-		String refreshToken = userService.getUseContextDetail().getGgRefreshToken();
-		calendarApi = new CalendarApi(refreshToken);
-
-		for (GoogleEvent event : events) {
-			eventIds.add(calendarApi.insertEvent(calenId, event).getId());
+	public List<EventDetailVo> insert(CalendarApi calendarApi, String calenId, List<EventDetailVo> eventDetailVos) {
+		List<EventDetailVo> insertedEvents = new ArrayList<EventDetailVo>();
+		insertedEvents = eventDetailVos;
+		// Thêm sự kiện môn học
+		for (EventDetailVo eventDetailVo : insertedEvents) {
+			GoogleEvent googleEvent = SubjectEventDetails.toGoogleEvent(eventDetailVo);
+			GoogleEvent insertResult = calendarApi.insertEvent(calenId, googleEvent);
+			if (insertResult == null) {
+				insertedEvents.remove(eventDetailVo);
+			}
 		}
 
-		return eventIds;
+		if (insertedEvents.size() <= 0) {
+			throw new CustomException("Lỗi khi insert lịch");
+		}
+
+		return insertedEvents;
 	}
 
 	/**
 	 * 
 	 */
 	@Override
-	public void insert1(String calenId, List<String> events) {
+	public void insertByJson(String calenId, List<String> events) {
 		try {
 			if (events.size() > 0) {
 				for (String eventJson : events) {
@@ -87,7 +100,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 				}
 			}
 		} catch (Exception e) {
-			System.out.println("thêm tuần không thành công!");
+			throw new CustomException(ScheduleServiceImpl.class + ": Lỗi khi insert events vào calendar");
 		}
 	}
 

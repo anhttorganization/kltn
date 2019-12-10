@@ -2,8 +2,10 @@ package vn.edu.vnua.dse.stcalendar.model;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -32,19 +34,32 @@ public class Event {
 	private Long id;
 
 	@Column(name = "event_id")
-	private Long eventId;
+	private String eventId;
 	
 	@Column(name = "subject_id")
 	private String subjectId;
 	
 	@Column(name = "subject_group")
-	private Long subjectGroup;
+	private String subjectGroup;
 	
 	@Column(name = "clazz")
 	private String clazz;
 	
 	@Column(name = "practice_group")
-	private Long practiceGroup;
+	private String practiceGroup;
+	
+	@Column(name = "credit")
+	private int credit;
+	
+	@Column(name = "start_slot")
+	private int startSlot;
+	
+	@Column(name = "end_slot")
+	private int endSlot;
+	
+	@Column(name = "status")
+	private boolean status;
+	
 	
 	@Column(name = "created_at")
 	private Date createdAt;
@@ -53,14 +68,14 @@ public class Event {
 	private Date updatedAt;
 
 	// referents
-	@ManyToOne
-	@JoinColumn(name = "calendar_id") // thông qua khóa ngoại user_id
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "evt_calendar_id") // thông qua khóa ngoại calendar_id
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
 	private Calendar calendar;
 	
-	@ManyToOne
-	@JoinColumn(name = "calen_detail_id") // thông qua khóa ngoại user_id
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "calen_detail_id") // thông qua khóa ngoại calendar_detail_id
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
 	private CalendarDetail calendarDetail;

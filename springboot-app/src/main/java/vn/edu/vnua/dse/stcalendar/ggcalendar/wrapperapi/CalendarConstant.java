@@ -33,6 +33,9 @@ public final class CalendarConstant {
 		+ "&include_granted_scopes=true"
 		+ "&state=state_parameter_passthrough_value" 
 		+ "&login_hint=%s";
+	
+	
+	public static final String EVENT_ID = "stcalendar%s";
 }
 
 

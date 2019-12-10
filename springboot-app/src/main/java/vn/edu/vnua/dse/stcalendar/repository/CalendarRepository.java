@@ -1,9 +1,11 @@
 package vn.edu.vnua.dse.stcalendar.repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import vn.edu.vnua.dse.stcalendar.model.Calendar;
@@ -17,5 +19,8 @@ public interface CalendarRepository extends JpaRepository<Calendar, Long>{
 	Optional<Calendar> findBycalendarId(String calendarId);
 	
 	Optional<Calendar> findByCalendarIdAndType(String calendarId, boolean type);
+	
+	@Query(value = "SELECT max(id) FROM Calendar")
+	public BigDecimal max();
 	
 }

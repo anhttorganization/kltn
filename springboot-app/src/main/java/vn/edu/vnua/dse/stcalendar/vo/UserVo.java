@@ -11,7 +11,7 @@ public class UserVo {
 	private String username;
 	private String firstName;
 	private String lastName;
-	private String avartar;
+	private String avatar;
 	private String faculty;
 	private String clazz;
 	private String password;

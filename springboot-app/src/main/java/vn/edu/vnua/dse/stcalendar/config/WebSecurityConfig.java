@@ -102,7 +102,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .authorizeRequests()
                     .antMatchers(permitAllEndpointList.toArray(new String[permitAllEndpointList.size()]))
                     .permitAll()
-                .and()
+                .and()                                       //anhtt đóng bảo mật test api cho nhanh
                     .authorizeRequests()
                     .antMatchers(API_ROOT_URL).authenticated() // Protected API End-points
                     

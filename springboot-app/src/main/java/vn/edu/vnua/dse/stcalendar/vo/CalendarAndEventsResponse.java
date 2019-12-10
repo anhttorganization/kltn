@@ -6,8 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import vn.edu.vnua.dse.stcalendar.ggcalendar.jsonobj.GoogleCalendar;
 import vn.edu.vnua.dse.stcalendar.ggcalendar.jsonobj.GoogleEvent;
-import vn.edu.vnua.dse.stcalendar.model.Calendar;
 
 @Data
 @Builder
@@ -15,6 +15,6 @@ import vn.edu.vnua.dse.stcalendar.model.Calendar;
 @AllArgsConstructor
 public class CalendarAndEventsResponse {
 	private String message;
-	private Calendar calendar;
+	private GoogleCalendar calendar;
 	private List<GoogleEvent> list;
 }

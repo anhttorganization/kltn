@@ -26,6 +26,19 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 public class Semester {
+	
+	
+	public Semester(String id) {
+		super();
+		this.id = id;
+	}
+
+	public Semester(String id, String name, Date startDate) {
+		this.id = id;
+		this.name = name;
+		this.startDate = startDate;
+	}
+
 	// fields
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +51,9 @@ public class Semester {
 	@Column(name = "start_date")
 	private Date startDate;
 
+	@Column(name = "status")
+	private boolean status;
+	
 	@Column(name = "created_at")
 	private Date createdAt;
 

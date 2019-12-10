@@ -10,6 +10,8 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 
+import vn.edu.vnua.dse.stcalendar.exceptions.CustomException;
+
 
 public class APIService {
 	public static String GetResult(String url, String accessToken) {
@@ -20,9 +22,12 @@ public class APIService {
 					.execute().returnContent().asString();
 		} catch (ClientProtocolException e) {
 			Logger.getLogger(APIService.class.getName()).log(Level.SEVERE, null, e);
+//			throw new CustomException(APIService.class.getName() + "->" + "Lỗi khi get api: " + e.getMessage());
 		} catch (IOException e) {
 			Logger.getLogger(APIService.class.getName()).log(Level.SEVERE, null, e);
+//			throw new CustomException(APIService.class.getName() + "->" + "Lỗi khi get api: " + e.getMessage());
 		}
+		
 		return null;
 	}
 
@@ -33,12 +38,14 @@ public class APIService {
 					.setHeader("Authorization", "Bearer " + accessToken)
 					.execute().returnContent().asString();
 		} catch (ClientProtocolException e) {
-			//Logger.getLogger(APIService.class.getName()).log(Level.SEVERE, null, e);
+			Logger.getLogger(APIService.class.getName()).log(Level.SEVERE, null, e);
+//			throw new CustomException(APIService.class.getName() + "->" + "Lỗi khi Delete api: " + e.getMessage());
 		} catch (IOException e) {
-			//Logger.getLogger(APIService.class.getName()).log(Level.SEVERE, null, e);
+			Logger.getLogger(APIService.class.getName()).log(Level.SEVERE, null, e);
+//			throw new CustomException(APIService.class.getName() + "->" + "Lỗi khi Delete api: " + e.getMessage());
 		}catch (Exception e) {
-			// TODO: handle exception
-			return null;
+			Logger.getLogger(APIService.class.getName()).log(Level.SEVERE, null, e);
+//			throw new CustomException(APIService.class.getName() + "->" + "Lỗi khi Delete api: " + e.getMessage());
 		}
 		return null;
 	}
@@ -47,11 +54,13 @@ public class APIService {
 		try {
 			return Request.Post(url).bodyForm(form).execute().returnContent().asString();
 		} catch (ClientProtocolException e) {
-		//	Logger.getLogger(APIService.class.getName()).log(Level.SEVERE, null, e);
+			Logger.getLogger(APIService.class.getName()).log(Level.SEVERE, null, e);
+			//throw new CustomException(APIService.class.getName() + "->" + "Lỗi khi Post api: PostResult(String url, List<NameValuePair> form)," + e.getMessage());
+
 		} catch (IOException e) {
-		//	Logger.getLogger(APIService.class.getName()).log(Level.SEVERE, null, e);
+//			throw new CustomException(APIService.class.getName() + "->" + "Lỗi khi Post api: PostResult(String url, List<NameValuePair> form), " + e.getMessage());
+			Logger.getLogger(APIService.class.getName()).log(Level.SEVERE, null, e);
 		}
-		
 		return null;
 	}
 	//Request URL:https://content.googleapis.com/calendar/v3/calendars?alt=json&key=AIzaSyAa8yy0GdcGPHdtD083HiGGx_S0vMPScDM
@@ -62,10 +71,11 @@ public class APIService {
 					.execute().returnContent().asString();
 		} catch (ClientProtocolException e) {
 			Logger.getLogger(APIService.class.getName()).log(Level.SEVERE, null, e);
+//			throw new CustomException(APIService.class.getName() + "->" + "Lỗi khi Post api: PostResult(String url, String accessToken, String json)," + e.getMessage());
 		} catch (IOException e) {
 			Logger.getLogger(APIService.class.getName()).log(Level.SEVERE, null, e);
+//			throw new CustomException(APIService.class.getName() + "->" + "Lỗi khi Post api: PostResult(String url, String accessToken, String json), " + e.getMessage());
 		}
-		
 		return null;
 	}
 	
@@ -76,10 +86,11 @@ public class APIService {
 					.execute().returnContent().asString();
 		} catch (ClientProtocolException e) {
 			Logger.getLogger(APIService.class.getName()).log(Level.SEVERE, null, e);
+//			throw new CustomException(APIService.class.getName() + "->" + "Lỗi khi Put api: " + e.getMessage());
 		} catch (IOException e) {
 			Logger.getLogger(APIService.class.getName()).log(Level.SEVERE, null, e);
+//			throw new CustomException(APIService.class.getName() + "->" + "Lỗi khi Put api: " + e.getMessage());
 		}
-		
 		return null;
 	}
 }

@@ -174,12 +174,12 @@ public class ScheduleUtils {
 		return dateStr;
 	}
 
-	public static Date findDay(Date startSemester, int week, int day) {
+	public static Date findDay(Date startSemester, long week, long day) {
 		// set date
 		Calendar calen = Calendar.getInstance();
 		calen.setTime(startSemester);
 		// compute
-		calen.set(Calendar.DAY_OF_MONTH, calen.get(Calendar.DAY_OF_MONTH) + (week - 1) * 7 + day);
+		calen.set(Calendar.DAY_OF_MONTH, (int) (calen.get(Calendar.DAY_OF_MONTH) + (week - 1) * 7 + day));
 
 		return calen.getTime();
 	}

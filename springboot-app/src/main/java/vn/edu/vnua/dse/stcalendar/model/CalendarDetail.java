@@ -2,11 +2,12 @@ package vn.edu.vnua.dse.stcalendar.model;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,16 +20,45 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
 @Table(name = "calendar_detail")
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class CalendarDetail {
+	public CalendarDetail(Semester semester, String scheduleHash, Set<Event> events) {//them events vao, vs moi event set calendarDetail = this
+		this.semester = semester;
+		this.scheduleHash = scheduleHash;
+		
+		for (Event event : events) {
+			event.setCalendarDetail(this);
+		}
+		this.events = events;
+		
+		this.createdAt  = new Date();
+		this.updatedAt  = new Date();
+	}
+	
+	public CalendarDetail(String scheduleHash, Set<Event> events) {//them events vao, vs moi event set calendarDetail = this
+		this.scheduleHash = scheduleHash;
+		
+		for (Event event : events) {
+			event.setCalendarDetail(this);
+		}
+		this.events = events;
+		
+		this.createdAt  = new Date();
+		this.updatedAt  = new Date();
+	}
+
+	public CalendarDetail() {
+		this.createdAt  = new Date();
+		this.updatedAt  = new Date();
+	}
+
+
 	// fields
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +68,9 @@ public class CalendarDetail {
 	@Column(name = "schedule_hash")
 	private String scheduleHash;
 
+	@Column(name = "status")
+	private boolean status;
+	
 	@Column(name = "created_at")
 	private Date createdAt;
 
@@ -46,7 +79,7 @@ public class CalendarDetail {
 
 	// referents
 	@ManyToOne
-	@JoinColumn(name = "calendar_id") 
+	@JoinColumn(name = "cd_calendar_id") 
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
 	private Calendar calendar;
@@ -57,7 +90,7 @@ public class CalendarDetail {
 	@ToString.Exclude
 	private Semester semester;
 
-	@OneToMany(mappedBy = "calendarDetail", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "calendarDetail", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude 
     private Collection<Event> events;

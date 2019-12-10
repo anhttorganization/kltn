@@ -98,7 +98,7 @@ public class LoginController {
 		user.setPassword(encoder.encode(userVo.getPassword())); // encode pasword
 		user.setFirstName(userVo.getFirstName());
 		user.setLastName(userVo.getLastName());
-		user.setAvatar(userVo.getAvartar());
+		user.setAvatar(userVo.getAvatar());
 		user.setClazz(userVo.getClazz());
 		user.setFaculty(userVo.getFaculty());
 		user.setEnabled(false); // chưa kích hoạt

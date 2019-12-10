@@ -12,7 +12,6 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-
   private username: string;
   private password: string;
 
@@ -20,30 +19,53 @@ export class LoginComponent implements OnInit {
     private loginServices: LoginServices,
     private router: Router,
     private toastr: ToastrService
-  ) { }
+  ) {}
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   doLogin() {
-    this.loginServices.checkLogin(this.username, this.password).subscribe(res => {
-      if (res && res.token) {
-        // decode
-        var payload = jwt_decode(res.token);
+    this.loginServices
+      .login(this.username, this.password)
+      .subscribe(res => {
+        if (res && res.token) {
+          // decode
+          const payload = jwt_decode(res.token);
 
-        // check role
-        if (payload.scopes[0] === AppCommon.ROLE_ADMIN) {
-          this.router.navigate(['admin']);
-          this.toastr.success("Đăng nhập thành công!", "Success");
+          switch (payload.scopes[0]) {
+            case AppCommon.ROLE_ADMIN:
+              // save token
+              localStorage.setItem('token', res.token);
+              localStorage.setItem('refreshToken', res.refreshToken);
+              localStorage.setItem('user', res.user);
+
+              this.router.navigate(['admin']);
+              this.toastr.success('Đăng nhập thành công!', 'Success');
+              break;
+            case AppCommon.ROLE_USER:
+            case AppCommon.ROLE_STUDENT:
+            case AppCommon.ROLE_TEACHER:
+            case AppCommon.ROLE_OFFICER:
+              // save token
+              localStorage.setItem('token', res.token);
+              localStorage.setItem('refreshToken', res.refreshToken);
+              localStorage.setItem('user', res.user);
+
+              this.router.navigate(['']);
+              this.toastr.success('Đăng nhập thành công!', 'Success');
+              break;
+            default:
+              this.toastr.success('Đăng nhập không thành công!', 'Error');
+          }
+
         }
-        if (payload.scopes[0] === AppCommon.ROLE_USER) {
-          this.router.navigate(['user']);
-          this.toastr.success("Đăng nhập thành công!", "Success");
-        }
-      } else {
-        this.toastr.success("Đăng nhập thất bại!", "Error");
-      }
-    });
+      });
+  }
+
+
+  public doLogout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
+    this.router.navigate(['']);
   }
 }

@@ -1,7 +1,6 @@
 package vn.edu.vnua.dse.stcalendar.crawling;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,8 +28,10 @@ import vn.edu.vnua.dse.stcalendar.exceptions.CustomException;
 import vn.edu.vnua.dse.stcalendar.ggcalendar.jsonobj.ExGoogleEvent;
 import vn.edu.vnua.dse.stcalendar.ggcalendar.jsonobj.GoogleDateTime;
 import vn.edu.vnua.dse.stcalendar.ggcalendar.jsonobj.GoogleEvent;
+import vn.edu.vnua.dse.stcalendar.ggcalendar.jsonobj.GoogleEventList;
 import vn.edu.vnua.dse.stcalendar.ggcalendar.wrapperapi.CalendarConstant;
 import vn.edu.vnua.dse.stcalendar.model.Semester;
+import vn.edu.vnua.dse.stcalendar.vo.EventDetailVo;
 import vn.edu.vnua.dse.stcalendar.vo.ScheduleEventsResult;
 
 @Service
@@ -53,7 +54,7 @@ public final class SubjectEventDetails {
 
 		ArrayList<String> weekEvents = getWeekOfSemesEvent(semester);
 		if (scheduleJson.size() > 0) {
-			return new ScheduleEventsResult(toGoogleEvent(scheduleJson), weekEvents);
+			return new ScheduleEventsResult(toEventDetailVos(scheduleJson), weekEvents);
 		} else {
 			throw new CustomException("Học kỳ không có môn học nào");
 		}
@@ -199,12 +200,12 @@ public final class SubjectEventDetails {
 		driver.close();
 		driver.quit();
 
-		// scheduleHash = AppUtils.getMD5(scheduleJson.toString());
+		scheduleHash = AppUtils.getMD5(scheduleJson.toString());
 		return scheduleJson;
 
 	}
 
-	private static final List<GoogleEvent> toGoogleEvent(ArrayList<ArrayList<String>> scheduleJson) {
+	private static final GoogleEventList toGoogleEvent(ArrayList<ArrayList<String>> scheduleJson) {
 		List<GoogleEvent> events = new ArrayList<>();
 		Gson gson = new Gson();
 		for (ArrayList<String> item : scheduleJson) {
@@ -258,6 +259,155 @@ public final class SubjectEventDetails {
 
 		}
 
+		GoogleEventList eventList = new GoogleEventList();
+		eventList.setItems(events);
+		
+		return eventList;
+	}
+	
+	public static final GoogleEvent toGoogleEvent(EventDetailVo eventDetailVo) {
+
+		String subjectCode = eventDetailVo.getSubjectId();
+		String subjectName = eventDetailVo.getSubjectName();
+		String classCode = eventDetailVo.getClazz();
+		String group = eventDetailVo.getSubjectGroup();
+		String practiceGroup = eventDetailVo.getPracticeGroup();
+		String weeks = eventDetailVo.getWeeks();
+		int day = eventDetailVo.getDay();
+		ArrayList<Integer> weekStudy = ScheduleUtils.getWeek(weeks);
+
+		int startSlot = eventDetailVo.getStartSlot();
+		int endSlot = eventDetailVo.getEndSlot();
+		String dssvUrl = eventDetailVo.getDdsv();
+		String siSo = eventDetailVo.getSiSo();
+
+		String summary = getSummary(subjectName, eventDetailVo.getSubjectId(),
+				eventDetailVo.getSubjectGroup(), eventDetailVo.getPracticeGroup());
+		String description = getDescription(subjectCode, classCode, group, practiceGroup, weekStudy, startSlot, endSlot,
+				dssvUrl, siSo);
+		Date start = getStartTime(weekStudy.get(0), day, startSlot);
+		Date end = getEnd_Time(weekStudy.get(0), day, endSlot);
+		GoogleDateTime startTime = new GoogleDateTime(start, CalendarConstant.TIME_ZONE);
+		GoogleDateTime endTime = new GoogleDateTime(end, CalendarConstant.TIME_ZONE);
+
+		int count = ScheduleUtils.getFullWeek(weeks).size();
+		String WEEKLY = getWEEKLY_COUNT(count);
+
+		ArrayList<Integer> exceptWeek = ScheduleUtils.getExceptWeek(weeks);
+		ArrayList<String> recurrence = new ArrayList<>();
+		recurrence.add(WEEKLY);
+		if (exceptWeek.size() > 0) {
+			String EXDATE = getEXDATE(exceptWeek, day, startSlot);
+			recurrence.add(EXDATE);
+		}
+
+		GoogleEvent googleEvent = GoogleEvent.builder().summary(summary).location(eventDetailVo.getLocation())
+				.description(description).start(startTime).end(endTime).recurrence(recurrence).build();
+
+		return googleEvent;
+
+	}
+	
+	public static final List<GoogleEvent> toGoogleEvents(List<EventDetailVo> eventDetailVos) {
+		List<GoogleEvent> googleEvents = new ArrayList<GoogleEvent>();
+		for(EventDetailVo eventDetailVo : eventDetailVos) {
+			String subjectCode = eventDetailVo.getSubjectId();
+			String subjectName = eventDetailVo.getSubjectName();
+			String classCode = eventDetailVo.getClazz();
+			String group = eventDetailVo.getSubjectGroup();
+			String practiceGroup = eventDetailVo.getPracticeGroup();
+			String weeks = eventDetailVo.getWeeks();
+			int day = eventDetailVo.getDay();
+			ArrayList<Integer> weekStudy = ScheduleUtils.getWeek(weeks);
+			
+			int startSlot = eventDetailVo.getStartSlot();
+			int endSlot = eventDetailVo.getEndSlot();
+			String dssvUrl = eventDetailVo.getDdsv();
+			String siSo = eventDetailVo.getSiSo();
+			
+			String summary = getSummary(subjectName, eventDetailVo.getSubjectId(), eventDetailVo.getSubjectGroup(), eventDetailVo.getPracticeGroup());
+			String description = getDescription(subjectCode, classCode, group, practiceGroup, weekStudy, startSlot,
+					endSlot, dssvUrl, siSo);
+			Date start = getStartTime(weekStudy.get(0), day, startSlot);
+			Date end = getEnd_Time(weekStudy.get(0), day, endSlot);
+			GoogleDateTime startTime = new GoogleDateTime(start, CalendarConstant.TIME_ZONE);
+			GoogleDateTime endTime = new GoogleDateTime(end, CalendarConstant.TIME_ZONE);
+			
+			int count = ScheduleUtils.getFullWeek(weeks).size();
+			String WEEKLY = getWEEKLY_COUNT(count);
+
+			ArrayList<Integer> exceptWeek = ScheduleUtils.getExceptWeek(weeks);
+			ArrayList<String> recurrence = new ArrayList<>();
+			recurrence.add(WEEKLY);
+			if (exceptWeek.size() > 0) {
+				String EXDATE = getEXDATE(exceptWeek, day, startSlot);
+				recurrence.add(EXDATE);
+			}
+			
+			
+			
+			GoogleEvent googleEvent = GoogleEvent.builder()
+					.summary(summary)
+					.location(eventDetailVo.getLocation())
+					.description(description)
+					.start(startTime)
+					.end(endTime)
+					.recurrence(recurrence)
+					.build();
+			
+			
+			googleEvents.add(googleEvent);
+		}
+		
+		return googleEvents;
+		
+	}
+	
+	//từ list json chứa thông tin các buổi học => list event
+	private static final List<EventDetailVo> toEventDetailVos(ArrayList<ArrayList<String>> scheduleJson) {
+		List<EventDetailVo> events = new ArrayList<>();
+		for (ArrayList<String> item : scheduleJson) {
+			String classCode = item.get(4).toString().trim();
+			if (!classCode.equals("")) {
+				String subjectCode = item.get(0).toString().trim();
+				String group = item.get(2).toString().trim();
+				String practiceGroup = item.get(7).toString().trim().replace("\n", "");
+				int day = ScheduleUtils.getDay(item.get(8).toString().trim());
+				int startSlot = Integer.parseInt(item.get(9).toString().trim());
+				int endSlot = startSlot + Integer.parseInt(item.get(10).toString().trim()) - 1;
+				String weekStr = item.get(13).toString().trim();
+//				ArrayList<Integer> weekStudy = ScheduleUtils.getWeek(weekStr);
+				String subjectName = item.get(1).toString().trim();
+				String location = item.get(11).toString();
+				String dssvUrl = item.get(14).toString();
+				String siSo = item.get(15).toString().trim();
+				
+				int credit = Integer.parseInt(item.get(3).toString().trim());
+				
+				EventDetailVo evt = EventDetailVo.builder()
+						.eventId(String.format(CalendarConstant.EVENT_ID, new Date().getTime()))
+						.subjectId(subjectCode)
+						.subjectGroup(group)
+						.clazz(classCode)
+						.practiceGroup(practiceGroup)
+						.credit(credit)
+						.startSlot(startSlot)
+						.endSlot(endSlot)
+						.day(day)
+						.weeks(weekStr)
+						.subjectName(subjectName)
+						.location(location)
+						.ddsv(dssvUrl)
+						.siSo(siSo)
+						.build();
+				
+				events.add(evt);
+				
+				System.out.println("---------------------------");
+				System.out.println(evt);
+			}
+		}
+
 		return events;
 	}
 
@@ -268,7 +418,7 @@ public final class SubjectEventDetails {
 	}
 
 	private static String getDescription(String subjectCode, String classCode, String group, String practiceGroup,
-			ArrayList<Integer> weekStudy, int startSlot, int endSlot, String dssv, String siso) {
+			ArrayList<Integer> weekStudy, long startSlot, long endSlot, String dssv, String siso) {
 		String weekDes = ScheduleUtils.joinIntArray(", ", weekStudy);
 		String slotDes = startSlot + "-" + endSlot;
 
@@ -294,7 +444,7 @@ public final class SubjectEventDetails {
 		return summary;
 	}
 
-	private static Date getStartTime(int week, int day, int slot) {
+	private static Date getStartTime(long week, long day, int slot) {
 		Date semesterDate = semesterStart; // lay ngay băt dau cua ky hoc
 
 		String timeStr = DateTimeConstant.STARTTIME.get(slot);
@@ -403,9 +553,9 @@ public final class SubjectEventDetails {
 		return RDATE;
 	}
 
-	private static String getEXDATE(ArrayList<Integer> excepWeek, int day, int slot) {
+	private static String getEXDATE(ArrayList<Integer> excepWeek, int day, int startSlot) {
 		ArrayList<String> EXDATE_Arr = new ArrayList<>();
-		String timeStr = DateTimeConstant.STARTTIME.get(slot);
+		String timeStr = DateTimeConstant.STARTTIME.get(startSlot);
 		for (int i = 0; i < excepWeek.size(); i++) {
 			// RDATE.add(MyUtils.formatyyMMddTHHmmss(findDay(date, weekStudy.get(i), day)));
 			Date result = ScheduleUtils.findDay(semesterStart, excepWeek.get(i), day);

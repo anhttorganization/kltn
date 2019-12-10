@@ -14,14 +14,18 @@ import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import vn.edu.vnua.dse.stcalendar.model.User;
 import vn.edu.vnua.dse.stcalendar.security.config.JwtSettings;
 import vn.edu.vnua.dse.stcalendar.security.model.Scopes;
 import vn.edu.vnua.dse.stcalendar.security.model.UserContext;
+import vn.edu.vnua.dse.stcalendar.service.UserService;
+import vn.edu.vnua.dse.stcalendar.vo.UserInfoVo;
 
 @Component
 public class JwtTokenFactory {
 	@Autowired
 	private JwtSettings settings;
+	@Autowired UserService userService;
 
 	/**
 	 * Factory method for issuing new JWT Tokens.
@@ -39,7 +43,23 @@ public class JwtTokenFactory {
 		// tạo claims
 		Claims claims = Jwts.claims().setSubject(userContext.getUsername());
 		claims.put("scopes", userContext.getAuthorities().stream().map(s -> s.toString()).collect(Collectors.toList()));
-
+		//
+		User user = userService.findByUsername(userContext.getUsername()).get();
+		UserInfoVo userInfoVo = UserInfoVo.builder()
+				.id(user.getId())
+				.username(user.getUsername())
+				.firstName(user.getFirstName())
+				.lastName(user.getLastName())
+				.avatar(user.getAvatar())
+				.faculty(user.getFaculty())
+				.clazz(user.getClazz())
+				.createdAt(user.getCreatedAt())
+				.updatedAt(user.getUpdatedAt())
+				.role(user.getRoles().iterator().next().getName())
+				.build();
+		
+		claims.put("user", userInfoVo);
+		
 		// Thời gian hiện tại
 		LocalDateTime currentTime = LocalDateTime.now();
 
