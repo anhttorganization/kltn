@@ -35,7 +35,19 @@ export class RegisterService {
       headers: new HttpHeaders().set('Content-Type', 'application/json'),
       responseType: "json"
     })
-}
+// =======
+//     return this.http.post(url, body, {
+//       headers: new HttpHeaders().set('Content-Type', 'application/json'),
+//       observe: 'response', // to display the full response
+//       responseType: 'json'
+//     }).subscribe(response => {
+//       console.log(response);
+//       return response;
+//   }, err => {
+//       throw err;
+//   });
+// >>>>>>> 60f101f24cad420e965688bc424e3f03b7e97865
+// }
 
 
 

@@ -1,4 +1,191 @@
-<div height="1600px">
-
-    <p> {{roleFromUser}} acx</p>
+<!--Sinh vien-->
+<div class="container">
+  <div class="row row-calendar">
+    <div class="col-md-4 col-sm-6 card-calendar mt-4">
+      <div class="card">
+        <img
+          class="card-img-top"
+          src="https://cdn0.iconfinder.com/data/icons/business-2-41/129/145-512.png"
+          alt="Card image cap"
+        />
+        <div class="card-body">
+          <h4 class="card-title"><a>Thêm thời khóa biểu</a></h4>
+          <p class="card-text">
+            Thêm/cập nhật thời khóa biểu của sinh viên vào Google Calendar.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-6 card-calendar mt-4">
+      <div class="card">
+        <img
+          class="card-img-top"
+          src="https://cdn3.iconfinder.com/data/icons/education-47/128/1-03-512.png"
+          alt="Card image cap"
+        />
+        <div class="card-body">
+          <h4 class="card-title"><a>Thêm lịch thi</a></h4>
+          <p class="card-text">
+            Thêm/cập nhật lịch thi của sinh viên vào Google Calendar.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-6 card-calendar mt-4">
+      <div class="card">
+        <img
+          class="card-img-top"
+          src="https://cdn0.iconfinder.com/data/icons/files-documents-12/128/file_1_xlsx_excel_document_upload-29-512.png"
+          alt="Card image cap"
+        />
+        <div class="card-body">
+          <h4 class="card-title"><a>Import lịch</a></h4>
+          <p class="card-text">
+            Thêm thời khóa biểu từ file excel vào lịch trên Google Calendar.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-6 card-calendar mt-4">
+      <div class="card">
+        <img
+          class="card-img-top"
+          src="https://cdn4.iconfinder.com/data/icons/small-n-flat/24/calendar-512.png"
+          alt="Card image cap"
+        />
+        <div class="card-body">
+          <h4 class="card-title"><a>Quản lý lịch</a></h4>
+          <p class="card-text">
+            Xem, quản lý lịch đã tạo từ ứng dụng.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <input type="hidden" id="error_message" value="" />
+  <input type="hidden" id="success_message" value="" />
+  <input type="hidden" id="info_message" value="" />
 </div>
+
+<!--Giang vien-->
+<!-- <div class="container">
+  <div class="row row-calendar">
+    <div class="col-md-4 col-sm-6 card-calendar mt-4">
+      <div class="card">
+        <img
+          class="card-img-top"
+          src="https://cdn0.iconfinder.com/data/icons/business-2-41/129/145-512.png"
+          alt="Card image cap"
+        />
+        <div class="card-body">
+          <h4 class="card-title"><a>Lấy lịch giảng dạy</a></h4>
+          <p class="card-text">
+            Thêm/cập nhật lịch giảng dạy của giảng viên vào Google Calendar.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-6 card-calendar mt-4">
+      <div class="card">
+        <img
+          class="card-img-top"
+          src="https://cdn3.iconfinder.com/data/icons/education-47/128/1-03-512.png"
+          alt="Card image cap"
+        />
+        <div class="card-body">
+          <h4 class="card-title"><a>Lấy lịch công tác tuần</a></h4>
+          <p class="card-text">
+            Tìm kiếm, thêm lịch công tác tuần vào lịch trên Google Calendar.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-6 card-calendar mt-4">
+      <div class="card">
+        <img
+          class="card-img-top"
+          src="https://cdn0.iconfinder.com/data/icons/files-documents-12/128/file_1_xlsx_excel_document_upload-29-512.png"
+          alt="Card image cap"
+        />
+        <div class="card-body">
+          <h4 class="card-title"><a>Import lịch</a></h4>
+          <p class="card-text">
+            Thêm thời khóa biểu từ file excel vào lịch trên Google Calendar.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-6 card-calendar mt-4">
+      <div class="card">
+        <img
+          class="card-img-top"
+          src="https://cdn4.iconfinder.com/data/icons/small-n-flat/24/calendar-512.png"
+          alt="Card image cap"
+        />
+        <div class="card-body">
+          <h4 class="card-title"><a>Quản lý lịch</a></h4>
+          <p class="card-text">
+            Xem, quản lý lịch đã tạo từ ứng dụng.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <input type="hidden" id="error_message" value="" />
+  <input type="hidden" id="success_message" value="" />
+  <input type="hidden" id="info_message" value="" />
+</div> -->
+
+<!--Cán bộ-->
+<!-- <div class="container">
+  <div class="row row-calendar">
+    <div class="col-md-4 col-sm-6 card-calendar mt-4">
+      <div class="card">
+        <img
+          class="card-img-top"
+          src="https://cdn4.iconfinder.com/data/icons/small-n-flat/24/calendar-512.png"
+          alt="Card image cap"
+        />
+        <div class="card-body">
+          <h4 class="card-title"><a>Quản lý lịch</a></h4>
+          <p class="card-text">
+            Xem, quản lý lịch đã tạo từ ứng dụng.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-6 card-calendar mt-4">
+      <div class="card">
+        <img
+          class="card-img-top"
+          src="https://cdn3.iconfinder.com/data/icons/education-47/128/1-03-512.png"
+          alt="Card image cap"
+        />
+        <div class="card-body">
+          <h4 class="card-title"><a>Lấy lịch công tác tuần</a></h4>
+          <p class="card-text">
+            Tìm kiếm, thêm lịch công tác tuần vào lịch trên Google Calendar.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-6 card-calendar mt-4">
+      <div class="card">
+        <img
+          class="card-img-top"
+          src="https://cdn0.iconfinder.com/data/icons/files-documents-12/128/file_1_xlsx_excel_document_upload-29-512.png"
+          alt="Card image cap"
+        />
+        <div class="card-body">
+          <h4 class="card-title"><a>Import lịch</a></h4>
+          <p class="card-text">
+            Thêm thời khóa biểu từ file excel vào lịch trên Google Calendar.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <input type="hidden" id="error_message" value="" />
+  <input type="hidden" id="success_message" value="" />
+  <input type="hidden" id="info_message" value="" />
+</div> -->
