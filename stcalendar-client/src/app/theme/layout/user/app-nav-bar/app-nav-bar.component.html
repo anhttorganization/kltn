@@ -15,41 +15,17 @@
           <span class="sr-only">(current)</span>
         </a>
             </li>
-            <li *ngIf="userInfo && userInfo.role && userInfo.role === 'ROLE_STUDENT'" class="nav-item dropdown">
+            <li *ngIf="userInfo && userInfo.role" class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="dropChucNang" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Chức năng</a>
                 <div class="dropdown-menu dropdown-default" aria-labelledby="dropChucNang">
-                    <a class="dropdown-item" href="#">Danh sách lịch</a>
-                    <a class="dropdown-item" href="#">Lấy lịch học</a>
-                    <a class="dropdown-item" href="#">Lấy lịch thi</a>
-                    <a class="dropdown-item" href="#">Import lịch</a>
+                    <a class="dropdown-item" routerLink="/calendar/list">Danh sách lịch</a>
+                    <a *ngIf="userInfo && userInfo.role && (userInfo.role === 'ROLE_OFFICER' || userInfo.role === 'ROLE_TEACHER')" class="dropdown-item" routerLink="/calendar/working">Lấy lịch công tác</a>
+                    <a *ngIf="userInfo && userInfo.role && userInfo.role === 'ROLE_TEACHER'" class="dropdown-item" routerLink="/calendar/teaching">Lấy lịch giảng dạy</a>
+                    <a *ngIf="userInfo && userInfo.role && userInfo.role === 'ROLE_STUDENT'" class="dropdown-item" routerLink="/calendar/study">Lấy lịch học</a>
+                    <a *ngIf="userInfo && userInfo.role && userInfo.role === 'ROLE_STUDENT'" class="dropdown-item" routerLink="/calendar/test">Lấy lịch thi</a>
+                    <a class="dropdown-item" routerLink="/calendar/import">Import lịch</a>
                 </div>
             </li>
-            <li *ngIf="userInfo && userInfo.role && userInfo.role === 'ROLE_TEACHER'" class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="dropChucNang" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Chức năng</a>
-                <div class="dropdown-menu dropdown-default" aria-labelledby="dropChucNang">
-                    <a class="dropdown-item" href="#">Danh sách lịch</a>
-                    <a class="dropdown-item" href="#">Lấy lịch công tác</a>
-                    <a class="dropdown-item" href="#">Lấy lịch giảng dạy</a>
-                    <a class="dropdown-item" href="#">Import lịch</a>
-                </div>
-            </li>
-            <li *ngIf="userInfo && userInfo.role && userInfo.role === 'ROLE_OFFICER'" class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="dropChucNang" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Chức năng</a>
-                <div class="dropdown-menu dropdown-default" aria-labelledby="dropChucNang">
-                    <a class="dropdown-item" href="#">Danh sách lịch</a>
-                    <a class="dropdown-item" href="#">Lấy lịch công tác</a>
-                    <a class="dropdown-item" href="#">Lấy lịch giảng dạy</a>
-                    <a class="dropdown-item" href="#">Import lịch</a>
-                </div>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="dropChinhSach" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Chính sách</a>
-                <div class="dropdown-menu dropdown-default" aria-labelledby="dropChinhSach">
-                    <a class="dropdown-item" href="#">Điều khoản sử dụng</a>
-                    <a class="dropdown-item" href="#">Chính sách bảo mật</a>
-                </div>
-            </li>
-
             <!-- Dropdown -->
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="dropHuongDan" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Hướng dẫn</a>

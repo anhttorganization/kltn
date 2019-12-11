@@ -44,7 +44,7 @@
                                             <span class="input-group-text"><i class="fas fa-at"></i></span>
                                         </div>
                                         <input type="email" class="form-control" placeholder="Tên tài khoản (gmail)" name="username" formControlName="username" pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}" title="Gmail không hợp lệ">
-                                       <!-- <div> <p class="errorMessage" *ngIf="formdata.controls.username.errors && formdata.controls.username.dirty ">Please provide first name.</p></div> -->
+                                        <!-- <div> <p class="errorMessage" *ngIf="formdata.controls.username.errors && formdata.controls.username.dirty ">Please provide first name.</p></div> -->
                                     </div>
                                     <!-- <span tooltip="Tooltip" show-delay="500">Tooltip on top</span> -->
                                     <div class="input-group mb-3">
@@ -59,7 +59,7 @@
                                         </div>
                                         <input type="password" class="form-control" placeholder="Nhập lại mật khẩu" name="repass" formControlName="repass">
                                     </div>
-                                    <div *ngIf="selectedRole !== 'ROLE_TEACHER'" class="input-group mb-3">
+                                    <div *ngIf="!(selectedRole === 'ROLE_STUDENT')" class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="far fa-envelope"></i></span>
                                         </div>

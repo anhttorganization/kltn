@@ -5,6 +5,7 @@ import jwt_decode from 'jwt-decode';
 import { Router } from '@angular/router';
 import { AppCommon } from '../../../../ultils/ultis';
 import { ToastrService } from 'ngx-toastr';
+import { ShareMessageService } from 'src/app/services/share-message.service';
 
 @Component({
   selector: 'app-login',
@@ -15,13 +16,26 @@ export class LoginComponent implements OnInit {
    username: string;
    password: string;
 
+   messageFromConfirm;
   constructor(
     private loginServices: LoginServices,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    // private  shareMessageService : ShareMessageService
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    // this.messageFromConfirm = this.shareMessageService.msgFromRegisterConfirm;
+    // alert(this.messageFromConfirm);
+    //    this.toastr.show('Test', null, {
+    //   disableTimeOut: true,
+    //   tapToDismiss: false,
+    //   toastClass: 'toast toast-success',
+    //   closeButton: true,
+    //   positionClass: 'toast-bottom-right'
+    // });
+      //  this.mytoast(this.token, 'toast-success');
+  }
 
   doLogin() {
     this.loginServices
@@ -39,7 +53,8 @@ export class LoginComponent implements OnInit {
               localStorage.setItem('user', JSON.stringify( payload.user));
 
               this.router.navigate(['admin']);
-              this.toastr.success('Đăng nhập thành công!', 'Success');
+              // this.toastr.success('Đăng nhập thành công!', 'Success');
+              this.mytoast('Đăng nhập thành công!', 'success');
               break;
             case AppCommon.ROLE_USER:
             case AppCommon.ROLE_STUDENT:
@@ -52,16 +67,28 @@ export class LoginComponent implements OnInit {
 
 
               this.router.navigate(['']);
-              this.toastr.success('Đăng nhập thành công!', 'Success');
+              // this.toastr.success('Đăng nhập thành công!', 'Success');
+              this.mytoast('Đăng nhập thành công!', 'success');
+
               break;
             default:
-              this.toastr.success('Đăng nhập không thành công!', 'Error');
+                this.mytoast('Đăng nhập không thành công!', 'error');
+
+              // this.toastr.success('Đăng nhập không thành công!', 'Error');
           }
 
         }
       });
   }
-
+mytoast(msg: string, status: string) {
+    this.toastr.show(msg,null,{
+      disableTimeOut: true,
+      tapToDismiss: true,
+      toastClass: "toast toast-"+status,
+      closeButton: true,
+      positionClass:'toast-bottom-right'
+    });
+  }
 
 
 }

@@ -17,7 +17,7 @@ export class RegisterService {
   //   return this.http.post(`${this.baseUrl}`, { username, password });
   // }
 
-  public register(user) {
+  public register(user): Observable<any>  {
     const url = AppCommon.baseUrl + '/auth/register';
     const body = {username: user.username,
       firstName: user.firstName,
@@ -31,15 +31,14 @@ export class RegisterService {
       staffMail: user.staffMail
     };
 
-    return this.http.post(url, body,{
+   return this.http.post(url, body,{
       headers: new HttpHeaders().set('Content-Type', 'application/json'),
-      observe: "response", // to display the full response
       responseType: "json"
-    }).subscribe(response => {
-      console.log(response);
-      return response;
-  }, err => {
-      throw err;
-  });
+    })
 }
+
+
+
+
+
 }

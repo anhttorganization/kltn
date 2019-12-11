@@ -1,3 +1,4 @@
+import { RegisterComponent } from './pages/authentication/register/register.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home/home.component';
@@ -22,7 +23,7 @@ const routes: Routes = [
       } , {
         path: 'calendar',
         loadChildren: () => import('./pages/calendar/calendar.module').then(module => module.CalendarModule),
-      } ,
+      }
     ]
   }, {
     path: '',
@@ -33,7 +34,7 @@ const routes: Routes = [
         loadChildren: () => import('./pages/authentication/authentication.module').then(module => module.AuthenticationModule)
       }
     ]
-  },{
+  }, {
     path: '',
     component: AdminComponent,
     children: [

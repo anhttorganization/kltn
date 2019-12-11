@@ -12,6 +12,10 @@ const routes: Routes = [  {
     {
       path: 'login',
       loadChildren: () => import('./login/login.module').then(module => module.LoginModule)
+    },
+    {
+      path: 'confirm',
+      loadChildren: () => import('./confirm/confirm.module').then(module => module.ConfirmModule)
     }
   ]
 }];
