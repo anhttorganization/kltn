@@ -5,7 +5,6 @@ import { ToastrService } from 'ngx-toastr';
 import jwt_decode from 'jwt-decode';
 import { AuthInfoService } from 'src/app/services/auth-info.service';
 
-
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -22,28 +21,21 @@ export class UserComponent implements OnInit {
     private toastr: ToastrService,
     private authInfoService: AuthInfoService
   ) {
-
     this.token = localStorage.getItem('token');
-    if(this.token){
+    if (this.token) {
       const payload = jwt_decode(this.token);
 
-      const isExp =  loginServices.isTokenExpired(payload.exp);
+      const isExp = loginServices.isTokenExpired(payload.exp);
       // if(isExp){
       //     //refresh
       // }
-      if(payload){
+      if (payload) {
         this.userInfo = payload.user;
       }
 
-
       this.authInfoService.setroleFromUser(this.userInfo.role);
     }
-
-
-
   }
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

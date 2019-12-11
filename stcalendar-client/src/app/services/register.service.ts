@@ -31,10 +31,10 @@ export class RegisterService {
       staffMail: user.staffMail
     };
 
-    return this.http.post(url, body,{
+    return this.http.post(url, body, {
       headers: new HttpHeaders().set('Content-Type', 'application/json'),
-      observe: "response", // to display the full response
-      responseType: "json"
+      observe: 'response', // to display the full response
+      responseType: 'json'
     }).subscribe(response => {
       console.log(response);
       return response;
