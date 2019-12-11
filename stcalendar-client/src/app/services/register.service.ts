@@ -47,7 +47,7 @@ export class RegisterService {
 //       throw err;
 //   });
 // >>>>>>> 60f101f24cad420e965688bc424e3f03b7e97865
-// }
+}
 
 
 

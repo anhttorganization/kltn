@@ -89,7 +89,7 @@ public class LoginController {
 		helper.setTo(email);
 		helper.setSubject("Xác nhận đăng ký tài khoản");
 
-		this.emailSender.send(message);
+//		this.emailSender.send(message);   -> tạm để kích hoạt luôn
 		// Lưu tài khoản
 		// encode, set role ->save
 
@@ -101,7 +101,7 @@ public class LoginController {
 		user.setAvatar(userVo.getAvatar());
 		user.setClazz(userVo.getClazz());
 		user.setFaculty(userVo.getFaculty());
-		user.setEnabled(false); // chưa kích hoạt
+		user.setEnabled(true); // chưa kích hoạt-> tạm để kích hoạt luôn
 		user.setRoles(null);
 		user.setPosts(null);
 		user.setCalendars(null);

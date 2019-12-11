@@ -1,5 +1,18 @@
-.card {
-  height: 455px;
-  width: 352px;
-  margin-top: 50px;
+.card-img-top {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 30%;
+}
+a {
+  text-decoration: underline;
+}
+.btn {
+  background-color: lightgray;
+}
+h4 {
+  text-align: center;
+}
+.link-center {
+  float: right;
 }
