@@ -19,6 +19,9 @@ const routes: Routes = [
       }, {
         path: 'user',
         loadChildren: () => import('./home/home.module').then(module => module.HomeModule),
+      } , {
+        path: 'calendar',
+        loadChildren: () => import('./pages/calendar/calendar.module').then(module => module.CalendarModule),
       } ,
     ]
   }, {
