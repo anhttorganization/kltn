@@ -10,7 +10,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-at"></i></span>
                             </div>
-                            <input type="email"  [(ngModel)]="username" class="form-control" placeholder="Tài khoản">
+                            <input type="email" [(ngModel)]="username" class="form-control" placeholder="Tài khoản">
                         </div>
                         <div class="input-group mb-4">
                             <div class="input-group-prepend">
@@ -24,7 +24,7 @@
                                 <label for="checkbox-fill-a1" class="cr"> Lưu đăng nhập</label>
                             </div>
                         </div>
-                        <button class="btn btn-block btn-primary mb-4" (click) = "doLogin()">Đăng nhập</button>
+                        <button class="btn btn-block btn-primary mb-4" (click)="doLogin()">Đăng nhập</button>
                         <p class="mb-2 text-muted">Quên mật khẩu? <a [routerLink]="['/auth/reset-password']" class="f-w-400">Lấy lại</a></p>
                         <p class="mb-2 text-muted">Chưa có tài khoản? <a [routerLink]="['/auth/register']" class="f-w-400">Đăng ký</a></p>
                         <p class="mb-0 text-muted"><a [routerLink]="['/']" class="f-w-400">Về trang chủ</a></p>

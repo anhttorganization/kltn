@@ -53,3 +53,15 @@ ul.navbar-nav li a {
     line-height: $header-height;
     padding: 0 15px;
 }
+
+@media (min-width: 991px) {
+    .sidebar-fixed {
+        display: block;
+    }
+}
+
+@media (max-width: 900px) {
+    .sidebar-fixed {
+        display: none;
+    }
+}

@@ -15,5 +15,7 @@ public class UserVo {
 	private String faculty;
 	private String clazz;
 	private String password;
-	private Long roleId;
+	private String repass;
+	private String role;
+	private String staffMail;	
 }

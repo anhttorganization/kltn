@@ -36,7 +36,7 @@ import vn.edu.vnua.dse.stcalendar.service.UserService;
 import vn.edu.vnua.dse.stcalendar.vo.UserVo;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 public class LoginController {
 	@Autowired
 	UserService userService;
@@ -64,7 +64,7 @@ public class LoginController {
 		// check role có tồn tại không
 		ArrayList<Role> roles = new ArrayList<Role>();
 		Optional<Role> opt;
-		opt = roleRepository.findById(userVo.getRoleId());
+		opt = roleRepository.findByName(userVo.getRole());
 		if (!opt.isPresent()) {
 			throw new CustomException("Role không tồn tại");
 		}

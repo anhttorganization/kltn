@@ -1,108 +1,112 @@
 <div class="auth-wrapper">
     <div class="auth-content">
         <div class="card">
-            <div class="row align-items-center text-center">
-                <div class="col-md-12">
-                    <div class="card-body">
-                        <img src="assets/images/stcalendar_logo_dark.png" alt="" class="img-fluid mb-4" id="signup_logo">
-                        <!-- <h4 class="mb-3 f-w-400">Sign up</h4> -->
-                        <div class="row text-center">
-                            <div class="col-md-12">
-                                <label _ngcontent-dgy-c3="" class="register-title"><b>Thông tin tài khoản</b></label>
+            <form [formGroup]="formdata" (ngSubmit)="onClickSubmit(formdata.value)">
+                <div class="row align-items-center text-center">
+                    <div class="col-md-12">
+                        <div class="card-body">
+                            <img src="assets/images/stcalendar_logo_dark.png" alt="" class="img-fluid mb-4" id="signup_logo">
+                            <!-- <h4 class="mb-3 f-w-400">Sign up</h4> -->
+                            <div class="row text-center">
+                                <div class="col-md-12">
+                                    <label class="register-title"><b>Thông tin tài khoản</b></label>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend" width=252px>
-                                        <div class="row text-left ml-0" style="width: 252px;">
-                                            <div class="col-md-12 p-0">
-                                                <label _ngcontent-xej-c3="" _ngcontent-doc-c15="" for="exampleFormControlSelect1" style="margin-top: 7px;">Loại tài khoản</label>
-
-                                                <select _ngcontent-doc-c15="" class="form-control" id="exampleFormControlSelect1">
-                                          <option _ngcontent-doc-c15="">Cán bộ</option>
-                                          <option _ngcontent-doc-c15="">Giảng viên</option>
-                                          <option _ngcontent-doc-c15="">Sinh viên</option>
-                                        </select>
+                            <div class="row">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend" width=252px>
+                                            <div class="row text-left ml-0" style="width: 252px;">
+                                                <div class="col-md-12 p-0">
+                                                    <label for="roleSelect" style="margin-top: 7px;">Loại tài khoản</label>
+                                                    <select (change)="onSelectRole($event.target.value)" class="form-control" id="roleSelect" name="role" formControlName="role">
+                                                      <option *ngFor="let role of roles" [value]="role.key">
+                                                        {{ role.value }}
+                                                      </option>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                            </div>
+                                <div class="col-md-6">
+                                </div>
 
-                        </div>
-                        <div class="row text-center">
-                            <div class="col-md-6">
-                                <!-- <label _ngcontent-dgy-c3=""><b>Thông tin tài khoản</b></label> -->
+                            </div>
+                            <div class="row text-center">
+                                <div class="col-md-6">
+                                    <!-- <label ><b>Thông tin tài khoản</b></label> -->
 
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-at"></i></span>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-at"></i></span>
+                                        </div>
+                                        <input type="email" class="form-control" placeholder="Tên tài khoản (gmail)" name="username" formControlName="username" pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}" title="Gmail không hợp lệ">
+                                       <!-- <div> <p class="errorMessage" *ngIf="formdata.controls.username.errors && formdata.controls.username.dirty ">Please provide first name.</p></div> -->
                                     </div>
-                                    <input type="email" class="form-control" placeholder="Tên tài khoản (gmail)">
+                                    <!-- <span tooltip="Tooltip" show-delay="500">Tooltip on top</span> -->
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                        </div>
+                                        <input type="password" class="form-control" placeholder="Mật khẩu" name="password" formControlName="password">
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                        </div>
+                                        <input type="password" class="form-control" placeholder="Nhập lại mật khẩu" name="repass" formControlName="repass">
+                                    </div>
+                                    <div *ngIf="selectedRole !== 'ROLE_TEACHER'" class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-envelope"></i></span>
+                                        </div>
+                                        <input type="email" class="form-control" placeholder="Email cán bộ" name="staffMail" formControlName="staffMail">
+                                    </div>
                                 </div>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                <div class="col-md-6">
+                                    <!-- <label><b>Thông tin người dùng</b></label> -->
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-info"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Họ đệm" name="lastName" formControlName="lastName">
                                     </div>
-                                    <input type="password" class="form-control" placeholder="Mật khẩu">
-                                </div>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-info"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Tên" name="firstName" formControlName="firstName">
                                     </div>
-                                    <input type="password" class="form-control" placeholder="Nhập lại mật khẩu">
-                                </div>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="far fa-envelope"></i></span>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-info"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" [placeholder]="selectedRole === 'ROLE_OFFICER' ? 'Đơn vị' : 'Khoa'" name="faculty" formControlName="faculty">
                                     </div>
-                                    <input type="email" class="form-control" placeholder="Email cán bộ">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-info"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" [placeholder]="selectedRole === 'ROLE_OFFICER' ? 'Tổ':selectedRole === 'ROLE_TEACHER' ? 'Bộ môn': 'Lớp'" name="clazz" formControlName="clazz">
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <!-- <label><b>Thông tin người dùng</b></label> -->
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-info"></i></span>
-                                    </div>
-                                    <input type="text" class="form-control" placeholder="Họ đệm">
+                            <button type="submit" class="btn btn-primary btn-block mb-4 mt-4">Đăng ký</button>
+                            <div class="row">
+                                <div class="col-md-6 text-md-left">
+                                    <p class="mb-2"> <a [routerLink]="['/']" class="f-w-400">Về trang chủ</a></p>
                                 </div>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-info"></i></span>
-                                    </div>
-                                    <input type="text" class="form-control" placeholder="Tên">
+                                <div class="col-md-6 text-md-right">
+                                    <p class="mb-2">Đã có tài khoản? <a [routerLink]="['/auth/login']" class="f-w-400">Đăng nhập</a></p>
                                 </div>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-info"></i></span>
-                                    </div>
-                                    <input type="text" class="form-control" placeholder="Khoa">
-                                </div>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-info"></i></span>
-                                    </div>
-                                    <input type="text" class="form-control" placeholder="Tổ">
-                                </div>
-                            </div>
-                        </div>
-                        <button class="btn btn-primary btn-block mb-4 mt-4">Đăng ký</button>
-                        <div class="row">
-                            <div class="col-md-6 text-md-left">
-                                <p class="mb-2"> <a [routerLink]="['/']" class="f-w-400">Về trang chủ</a></p>
-                            </div>
-                            <div class="col-md-6 text-md-right">
-                                <p class="mb-2">Đã có tài khoản? <a [routerLink]="['/auth/login']" class="f-w-400">Đăng nhập</a></p>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
+</div>

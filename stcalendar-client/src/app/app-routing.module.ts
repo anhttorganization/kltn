@@ -14,7 +14,7 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'user/home',
+        redirectTo: '/user/home',
         pathMatch: 'full'
       }, {
         path: 'user',

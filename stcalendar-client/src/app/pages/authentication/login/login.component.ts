@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LoginServices } from '../../../services/login.services.ts.service';
-import { resolveSanitizationFn } from '@angular/compiler/src/render3/view/template';
+// import { resolveSanitizationFn } from '@angular/compiler/src/render3/view/template';
 import jwt_decode from 'jwt-decode';
 import { Router } from '@angular/router';
 import { AppCommon } from '../../../../ultils/ultis';
@@ -12,8 +12,8 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  private username: string;
-  private password: string;
+   username: string;
+   password: string;
 
   constructor(
     private loginServices: LoginServices,
@@ -30,13 +30,13 @@ export class LoginComponent implements OnInit {
         if (res && res.token) {
           // decode
           const payload = jwt_decode(res.token);
-
+          console.log(payload);
           switch (payload.scopes[0]) {
             case AppCommon.ROLE_ADMIN:
               // save token
               localStorage.setItem('token', res.token);
               localStorage.setItem('refreshToken', res.refreshToken);
-              localStorage.setItem('user', res.user);
+              localStorage.setItem('user', JSON.stringify( payload.user));
 
               this.router.navigate(['admin']);
               this.toastr.success('Đăng nhập thành công!', 'Success');
@@ -48,7 +48,8 @@ export class LoginComponent implements OnInit {
               // save token
               localStorage.setItem('token', res.token);
               localStorage.setItem('refreshToken', res.refreshToken);
-              localStorage.setItem('user', res.user);
+              localStorage.setItem('user', JSON.stringify( payload.user));
+
 
               this.router.navigate(['']);
               this.toastr.success('Đăng nhập thành công!', 'Success');
@@ -62,10 +63,5 @@ export class LoginComponent implements OnInit {
   }
 
 
-  public doLogout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('user');
-    this.router.navigate(['']);
-  }
+
 }
