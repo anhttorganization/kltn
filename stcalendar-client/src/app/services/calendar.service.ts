@@ -29,4 +29,33 @@ export class CalendarService {
       responseType: 'json'
     });
   }
+
+  public checkAuth(token:string): Observable<any> {
+    const url = AppCommon.baseUrl + '/calendar/check-authorization';
+    return this.http.get(url, {
+      headers: new HttpHeaders().set('Authorization', 'Bearer ' + token),
+      responseType: 'text'
+    });
+  }
+
+  public getAuth(token, code:string): Observable<any> {
+    const url = AppCommon.baseUrl + '/calendar/authorization';
+    const res = this.http.get(url, {
+      headers: new HttpHeaders().set('Authorization', 'Bearer ' + token),
+      params: new HttpParams().set('code', code),
+      responseType: 'json'
+    });
+    return res;
+  }
+
+
+  public
 }
+// get(url: string, options: {
+//   headers?: HttpHeaders;
+//   observe: 'response';
+//   params?: HttpParams;
+//   reportProgress?: boolean;
+//   responseType?: 'json';
+//   withCredentials?: boolean;
+// }): Observable<HttpResponse<Object>>;

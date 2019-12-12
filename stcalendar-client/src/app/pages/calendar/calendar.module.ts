@@ -5,7 +5,7 @@ import { CalendarRoutingModule } from './calendar-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [],
+  declarations: [ ],
   imports: [
     CommonModule,
     CalendarRoutingModule,

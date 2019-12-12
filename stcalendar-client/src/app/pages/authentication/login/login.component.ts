@@ -86,11 +86,13 @@ export class LoginComponent implements OnInit {
   }
 mytoast(msg: string, status: string) {
     this.toastr.show(msg,null,{
-      disableTimeOut: true,
+      // disableTimeOut: true,
       tapToDismiss: true,
       toastClass: "toast toast-"+status,
       closeButton: true,
-      positionClass:'toast-bottom-right'
+      positionClass:'toast-bottom-right',
+      timeOut: 5000,
+
     });
   }
 

@@ -36,7 +36,7 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
     }),
   ],
   providers: [LoginServices,
-    {provide: LocationStrategy, useClass: HashLocationStrategy}
+    // {provide: LocationStrategy, useClass: HashLocationStrategy}
   ],
   bootstrap: [AppComponent]
 })

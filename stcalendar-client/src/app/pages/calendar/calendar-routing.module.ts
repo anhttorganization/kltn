@@ -1,6 +1,6 @@
 import { CalendarListModule } from './calendar-list/calendar-list.module';
 import { CalendarListComponent } from './calendar-list/calendar-list.component';
-import { NgModule } from '@angular/core';
+import { NgModule, Component } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 
@@ -30,8 +30,10 @@ const routes: Routes = [{
     {
       path: 'test',
       loadChildren: () => import('./test/test.module').then(module => module.TestModule)
+    },{
+      path: 'auth',
+      loadChildren: () => import('./calen-auth/calen-auth.module').then(module => module.CalenAuthModule)
     }
-
   ]
 }];
 

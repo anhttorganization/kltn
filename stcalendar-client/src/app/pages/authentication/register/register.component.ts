@@ -106,12 +106,12 @@ export class RegisterComponent implements OnInit {
       this.registerServices.register(data).subscribe(res => {
         console.log(res);
         if (res && res.status == 201) {
-        this.mytoast("Tài khoản đã tồn tại", 'error');
-        }else if(res && res.body){
-          this.mytoast("Đăng ký thành công", 'success');
-          this.router.navigate(['auth/login'])
-        }else{
-          this.mytoast("Đăng ký thất bại", 'error');
+        this.mytoast('Tài khoản đã tồn tại', 'error');
+        } else if (res && res.body) {
+          this.mytoast('Đăng ký thành công', 'success');
+          this.router.navigate(['auth/login']);
+        } else {
+          this.mytoast('Đăng ký thất bại', 'error');
         }
 
       });
@@ -121,12 +121,14 @@ export class RegisterComponent implements OnInit {
   }
 
   mytoast(msg: string, status: string) {
-    this.toastr.show(msg, null, {
-      disableTimeOut: true,
+    this.toastr.show(msg,null,{
+      // disableTimeOut: true,
       tapToDismiss: true,
-      toastClass: 'toast toast-' + status,
+      toastClass: "toast toast-"+status,
       closeButton: true,
-      positionClass: 'toast-bottom-right'
+      positionClass:'toast-bottom-right',
+      timeOut: 5000,
+
     });
   }
 }

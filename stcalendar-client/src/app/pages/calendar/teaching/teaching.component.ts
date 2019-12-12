@@ -26,6 +26,21 @@ export class TeachingComponent implements OnInit {
     private toastr: ToastrService
   ) {
     this.token = localStorage.getItem('token');
+
+    this.calendarService.checkAuth(this.token).subscribe(res => {
+      if (res) {
+        window.location.href = res;
+      }
+  },
+  err => {
+    console.log(err);
+    let msg = err.error.message;
+    if (!msg) {
+      msg = 'Có lỗi xảy ra';
+    }
+    this.mytoast(msg, 'error');
+  }
+);
   }
 
   ngOnInit() {
@@ -51,7 +66,7 @@ export class TeachingComponent implements OnInit {
 
 
   onClickSubmit(data) {
-    if (this.formdata.controls.studentId.errors) {
+    if (this.formdata.controls.studentId.errors || !this.formdata.controls.studentId.value.trim().toLowerCase().match('^[a-z]{3}\\d{2}$')) {
       this.mytoast('Mã giảng viên không hợp lệ', 'error');
     } else if (this.formdata.controls.semester.errors) {
       this.mytoast('Bạn chưa chọn học kỳ', 'error');
@@ -64,7 +79,7 @@ export class TeachingComponent implements OnInit {
           this.mytoast('Lịch đã tồn tại', 'success');
           // this.router.navigate(['auth/login']);
         } else {
-          this.mytoast('Đăng ký thất bại', 'error');
+          this.mytoast('Thêm lịch thất bại', 'error');
         }
 
       }, err => {
@@ -79,14 +94,15 @@ export class TeachingComponent implements OnInit {
     }
   }
 
-
   mytoast(msg: string, status: string) {
-    this.toastr.show(msg, null, {
-      disableTimeOut: true,
+    this.toastr.show(msg,null,{
+      // disableTimeOut: true,
       tapToDismiss: true,
-      toastClass: 'toast toast-' + status,
+      toastClass: "toast toast-"+status,
       closeButton: true,
-      positionClass: 'toast-bottom-right'
+      positionClass:'toast-bottom-right',
+      timeOut: 5000,
+
     });
   }
 }

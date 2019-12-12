@@ -65,6 +65,9 @@ public class AuthorizationController {
 		// get refresh token
 	
 		GoogleToken token = calendarApi.getRefreshToken(code);
+		if(token ==  null) {
+			return "";
+		}
 		String accessToken = token.getAccess_token();
 		String refreshToken = token.getRefresh_token();
 		

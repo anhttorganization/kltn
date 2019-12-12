@@ -47,7 +47,7 @@ const routes: Routes = [
         loadChildren: () => import('./dashboard/dashboard.module').then(module => module.DashboardModule),
       } ,
     ]
-  }
+  },
 ];
 
 @NgModule({
