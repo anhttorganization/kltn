@@ -46,10 +46,11 @@ public final class SubjectEventDetails {
 
 	public static Date semesterStart;
 
-	public static String message = "SubjectEventDetails.java : ";
+//	public static String message = "SubjectEventDetails.java : ";
 
-	public static final ScheduleEventsResult getEventsFromSchedule(String studentId, Semester semester)
-	{
+	public static String message = "";
+
+	public static final ScheduleEventsResult getEventsFromSchedule(String studentId, Semester semester) {
 		ArrayList<ArrayList<String>> scheduleJson = getSchedule(studentId, semester.getId());
 
 		ArrayList<String> weekEvents = getWeekOfSemesEvent(semester);
@@ -261,11 +262,11 @@ public final class SubjectEventDetails {
 
 		GoogleEventList eventList = new GoogleEventList();
 		eventList.setItems(events);
-		
+
 		return eventList;
 	}
-	
-	public static final GoogleEvent toGoogleEvent(EventDetailVo eventDetailVo) {
+
+	public static final GoogleEvent toGoogleEvent(EventDetailVo eventDetailVo, String role) {
 
 		String subjectCode = eventDetailVo.getSubjectId();
 		String subjectName = eventDetailVo.getSubjectName();
@@ -281,10 +282,17 @@ public final class SubjectEventDetails {
 		String dssvUrl = eventDetailVo.getDdsv();
 		String siSo = eventDetailVo.getSiSo();
 
-		String summary = getSummary(subjectName, eventDetailVo.getSubjectId(),
-				eventDetailVo.getSubjectGroup(), eventDetailVo.getPracticeGroup());
-		String description = getDescription(subjectCode, classCode, group, practiceGroup, weekStudy, startSlot, endSlot,
-				dssvUrl, siSo);
+		String summary = getSummary(subjectName, eventDetailVo.getSubjectId(), eventDetailVo.getSubjectGroup(),
+				eventDetailVo.getPracticeGroup());
+
+		String description = "";
+		// phân biệt gv/sv
+		if (role.equals("ROLE_STUDENT")) {
+			description = getDescriptionStudent(subjectCode, classCode, group, practiceGroup, weekStudy, startSlot, endSlot);
+		}else {
+			 description = getDescription(subjectCode, classCode, group, practiceGroup, weekStudy, startSlot, endSlot,
+					dssvUrl, siSo);
+		}
 		Date start = getStartTime(weekStudy.get(0), day, startSlot);
 		Date end = getEnd_Time(weekStudy.get(0), day, endSlot);
 		GoogleDateTime startTime = new GoogleDateTime(start, CalendarConstant.TIME_ZONE);
@@ -307,10 +315,11 @@ public final class SubjectEventDetails {
 		return googleEvent;
 
 	}
+
 	
-	public static final List<GoogleEvent> toGoogleEvents(List<EventDetailVo> eventDetailVos) {
+	public static final List<GoogleEvent> toGoogleEvents(List<EventDetailVo> eventDetailVos, String role) {
 		List<GoogleEvent> googleEvents = new ArrayList<GoogleEvent>();
-		for(EventDetailVo eventDetailVo : eventDetailVos) {
+		for (EventDetailVo eventDetailVo : eventDetailVos) {
 			String subjectCode = eventDetailVo.getSubjectId();
 			String subjectName = eventDetailVo.getSubjectName();
 			String classCode = eventDetailVo.getClazz();
@@ -319,20 +328,30 @@ public final class SubjectEventDetails {
 			String weeks = eventDetailVo.getWeeks();
 			int day = eventDetailVo.getDay();
 			ArrayList<Integer> weekStudy = ScheduleUtils.getWeek(weeks);
-			
+
 			int startSlot = eventDetailVo.getStartSlot();
 			int endSlot = eventDetailVo.getEndSlot();
 			String dssvUrl = eventDetailVo.getDdsv();
 			String siSo = eventDetailVo.getSiSo();
+
+			String summary = getSummary(subjectName, eventDetailVo.getSubjectId(), eventDetailVo.getSubjectGroup(),
+					eventDetailVo.getPracticeGroup());
 			
-			String summary = getSummary(subjectName, eventDetailVo.getSubjectId(), eventDetailVo.getSubjectGroup(), eventDetailVo.getPracticeGroup());
-			String description = getDescription(subjectCode, classCode, group, practiceGroup, weekStudy, startSlot,
-					endSlot, dssvUrl, siSo);
+			
+			String description = "";
+			// phân biệt gv/sv
+			if (role.equals("ROLE_STUDENT")) {
+				description = getDescriptionStudent(subjectCode, classCode, group, practiceGroup, weekStudy, startSlot, endSlot);
+			}else {
+				 description = getDescription(subjectCode, classCode, group, practiceGroup, weekStudy, startSlot, endSlot,
+						dssvUrl, siSo);
+			}
+			
 			Date start = getStartTime(weekStudy.get(0), day, startSlot);
 			Date end = getEnd_Time(weekStudy.get(0), day, endSlot);
 			GoogleDateTime startTime = new GoogleDateTime(start, CalendarConstant.TIME_ZONE);
 			GoogleDateTime endTime = new GoogleDateTime(end, CalendarConstant.TIME_ZONE);
-			
+
 			int count = ScheduleUtils.getFullWeek(weeks).size();
 			String WEEKLY = getWEEKLY_COUNT(count);
 
@@ -343,27 +362,19 @@ public final class SubjectEventDetails {
 				String EXDATE = getEXDATE(exceptWeek, day, startSlot);
 				recurrence.add(EXDATE);
 			}
-			
-			
-			
-			GoogleEvent googleEvent = GoogleEvent.builder()
-					.summary(summary)
-					.location(eventDetailVo.getLocation())
-					.description(description)
-					.start(startTime)
-					.end(endTime)
-					.recurrence(recurrence)
-					.build();
-			
-			
+
+			GoogleEvent googleEvent = GoogleEvent.builder().id(eventDetailVo.getEventId()).summary(summary)
+					.location(eventDetailVo.getLocation()).description(description).start(startTime).end(endTime)
+					.recurrence(recurrence).build();
+
 			googleEvents.add(googleEvent);
 		}
-		
+
 		return googleEvents;
-		
+
 	}
-	
-	//từ list json chứa thông tin các buổi học => list event
+
+	// từ list json chứa thông tin các buổi học => list event
 	private static final List<EventDetailVo> toEventDetailVos(ArrayList<ArrayList<String>> scheduleJson) {
 		List<EventDetailVo> events = new ArrayList<>();
 		for (ArrayList<String> item : scheduleJson) {
@@ -381,28 +392,17 @@ public final class SubjectEventDetails {
 				String location = item.get(11).toString();
 				String dssvUrl = item.get(14).toString();
 				String siSo = item.get(15).toString().trim();
-				
+
 				int credit = Integer.parseInt(item.get(3).toString().trim());
-				
+
 				EventDetailVo evt = EventDetailVo.builder()
-						.eventId(String.format(CalendarConstant.EVENT_ID, new Date().getTime()))
-						.subjectId(subjectCode)
-						.subjectGroup(group)
-						.clazz(classCode)
-						.practiceGroup(practiceGroup)
-						.credit(credit)
-						.startSlot(startSlot)
-						.endSlot(endSlot)
-						.day(day)
-						.weeks(weekStr)
-						.subjectName(subjectName)
-						.location(location)
-						.ddsv(dssvUrl)
-						.siSo(siSo)
-						.build();
-				
+						.eventId(String.format(CalendarConstant.EVENT_ID, new Date().getTime())).subjectId(subjectCode)
+						.subjectGroup(group).clazz(classCode).practiceGroup(practiceGroup).credit(credit)
+						.startSlot(startSlot).endSlot(endSlot).day(day).weeks(weekStr).subjectName(subjectName)
+						.location(location).ddsv(dssvUrl).siSo(siSo).build();
+
 				events.add(evt);
-				
+
 				System.out.println("---------------------------");
 				System.out.println(evt);
 			}
@@ -433,6 +433,23 @@ public final class SubjectEventDetails {
 		return descpription;
 	}
 
+	//description sv
+	private static String getDescriptionStudent(String subjectCode, String classCode, String group,
+			String practiceGroup, ArrayList<Integer> weekStudy, int startSlot, int endSlot) {
+		String weekDes = ScheduleUtils.joinIntArray(", ", weekStudy);
+		String slotDes = startSlot + "-" + endSlot;
+
+		String descpription = "";
+		if (practiceGroup.equals("")) {
+			descpription = String.format(DESCRIPTION, subjectCode, classCode, group, weekDes, slotDes);
+		} else {
+			descpription = String.format(DESCRIPTION_HAVE_PRACTICE, subjectCode, classCode, group, practiceGroup,
+					weekDes, slotDes);
+		}
+		return descpription;
+	}
+
+	
 	private static String getSummary(String subjectName, String subjectCode, String group, String practiceGroup) {
 		String summary = "";
 		if (practiceGroup.equals("")) {

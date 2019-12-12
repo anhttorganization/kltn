@@ -77,8 +77,12 @@ export class LoginComponent implements OnInit {
               // this.toastr.success('Đăng nhập không thành công!', 'Error');
           }
 
-        }
-      });
+        }else{
+            this.mytoast('Đăng nhập không thành công!', 'error');
+          }
+      }, err => {
+        this.mytoast('Tài khoản hoặc mật khẩu không chính xác', 'error');
+    });
   }
 mytoast(msg: string, status: string) {
     this.toastr.show(msg,null,{

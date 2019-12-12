@@ -16,8 +16,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -111,5 +109,15 @@ public class Calendar {
 	public void setCalendarDetails(CalendarDetail... calendarDetails) {
 		for (CalendarDetail calendarDetail : calendarDetails)
 			calendarDetail.setCalendar(this);
+	}
+	
+	public void addCalendarDetails(CalendarDetail calendarDetail) {
+		calendarDetail.setCalendar(this);
+		this.calendarDetails.add(calendarDetail);
+	}
+	
+	public void removeCalendarDetails(CalendarDetail calendarDetail)
+	{
+		this.calendarDetails.remove(calendarDetail);
 	}
 }

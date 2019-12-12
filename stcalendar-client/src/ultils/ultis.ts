@@ -1,5 +1,6 @@
 export class AppCommon {
   public static baseUrl = 'http://localhost:8081/api';
+  // public static baseUrl = 'http://st-dse.vnua.edu.vn:6885/stcalendar2api/api';
   public static ROLE_ADMIN = 'ROLE_ADMIN';
   public static ROLE_USER = 'ROLE_USER';
   public static ROLE_STUDENT = 'ROLE_STUDENT';

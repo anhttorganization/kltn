@@ -44,7 +44,7 @@ export class ConfirmComponent implements OnInit {
   //     tapToDismiss: true,
   //     toastClass: "toast "+status,
   //     closeButton: true,
-  //     positionClass:'bottom-right'
+  //     positionClass:'toast-bottom-right'
   //   });
   // }
 

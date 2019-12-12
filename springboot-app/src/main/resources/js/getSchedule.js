@@ -9,7 +9,7 @@
 //                    arr[index].push($(td).text());  
 //            })
 //			arr[index] = JSON.stringify(arr[index]);
-//        })
+//        }) 	
 //return arr;
 
 var a = $.map($('.grid-roll2>table>tbody>tr'), tr => $(tr).find('>td'));

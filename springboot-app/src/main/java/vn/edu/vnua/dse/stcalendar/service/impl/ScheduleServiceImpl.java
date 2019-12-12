@@ -1,10 +1,7 @@
 package vn.edu.vnua.dse.stcalendar.service.impl;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,8 +21,8 @@ import vn.edu.vnua.dse.stcalendar.vo.ScheduleEventsResult;
 @Service("scheduleService")
 public class ScheduleServiceImpl implements ScheduleService {
 
-	@Autowired
-	CalendarApi calendarApi;
+//	@Autowired
+//	CalendarApi calendarApi;
 
 	@Autowired
 	SemesterRepository semesterRepository;
@@ -54,7 +51,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 		// Thêm sự kiện môn học
 		for (EventDetailVo eventDetailVo : insertedEvents) {
-			GoogleEvent googleEvent = SubjectEventDetails.toGoogleEvent(eventDetailVo);
+			GoogleEvent googleEvent = SubjectEventDetails.toGoogleEvent(eventDetailVo, userService.getUseContextDetail().getRoles().iterator().next().getName());
 			GoogleEvent insertResult = calendarApi.insertEvent(calenId, googleEvent);
 			if (insertResult == null) {
 				insertedEvents.remove(eventDetailVo);
@@ -74,7 +71,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 		insertedEvents = eventDetailVos;
 		// Thêm sự kiện môn học
 		for (EventDetailVo eventDetailVo : insertedEvents) {
-			GoogleEvent googleEvent = SubjectEventDetails.toGoogleEvent(eventDetailVo);
+			GoogleEvent googleEvent = SubjectEventDetails.toGoogleEvent(eventDetailVo, userService.getUseContextDetail().getRoles().iterator().next().getName());
 			GoogleEvent insertResult = calendarApi.insertEvent(calenId, googleEvent);
 			if (insertResult == null) {
 				insertedEvents.remove(eventDetailVo);
@@ -92,7 +89,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 	 * 
 	 */
 	@Override
-	public void insertByJson(String calenId, List<String> events) {
+	public void insertByJson(CalendarApi calendarApi, String calenId, List<String> events) {
 		try {
 			if (events.size() > 0) {
 				for (String eventJson : events) {

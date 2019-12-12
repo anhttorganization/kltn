@@ -13,5 +13,5 @@ public interface ScheduleService {
 	
 	public List<EventDetailVo> insert(CalendarApi calendarApi, String calenId, List<EventDetailVo> eventDetailVos);
 	
-	void insertByJson(String calenId, List<String> events);
+	void insertByJson(CalendarApi calendarApi, String calenId, List<String> events);
 }

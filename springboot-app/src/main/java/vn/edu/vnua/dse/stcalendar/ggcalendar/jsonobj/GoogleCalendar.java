@@ -14,11 +14,11 @@ public class GoogleCalendar {
 		super();
 	}
 
-//	public GoogleCalendar(String id, String summary, String timeZone) {
-//		this.id = id;
-//		this.summary = summary;
-//		this.timeZone = timeZone;
-//	}
+	public GoogleCalendar(String id, String summary, String timeZone) {
+		this.id = id;
+		this.summary = summary;
+		this.timeZone = timeZone;
+	}
 
 	public GoogleCalendar(String summary) {
 		super();
