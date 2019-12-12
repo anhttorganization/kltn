@@ -1,1 +1,70 @@
-<p>teaching works!</p>
+<div class="card working-card">
+    <h5 class="card-title">Lấy lịch giảng dạy</h5>
+    <div class="card-body">
+        <label for="search">Tìm kiếm :</label>
+        <div class="input-group mb-3">
+            <input name="search" type="text" class="form-control" placeholder="Giám đốc Nguyễn Thị Lan" aria-label="search" aria-describedby="basic-addon1">
+            <button class="btn btn-md my-2 my-sm-0 ml-3 btn-search" type="submit">Tìm kiếm</button>
+        </div>
+        <div class="search-result">
+            <table class="table">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col" class="stt-table">STT</th>
+                        <th scope="col" class="date-table">Ngày tháng</th>
+                        <th scope="col" class="event-table">Sự kiện</th>
+                        <th scope="col" class="action-table">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>Thứ 2 <br /> 2/12</td>
+                        <td>09:00 - 15:30: Bộ Giáo dục và Đào tạo, 35 Đại Cồ Việt, Hà Nội Khai mạc Chương trình làm việc của Đoàn giám sát của Ngân hàng Thế giới với Ban QLDA SAHEP và các trường thuộc dự án SAHEP (từ ngày 09/12/2019 đến ngày 19/12/2019) TP:
+                            T. Viên (PGĐ Ban QLDA) T. Tiệp (VPHV), T. Trung (Ban TCKT), T. Nam (Ban CSVC), C. Liên (Ban HTQT); Ban Hợp tác quốc tế
+                        </td>
+                        <td>
+                            <div class="action-check">
+                                <input type="checkbox" autocomplete="off" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">2</th>
+                        <td>Thứ 3 <br /> 3/12</td>
+                        <td>08:00 - 11:30: Phòng Tiếp công dân (Phòng 126-Nhà Hành chính) Tiếp CBVC và người học TP: Ban Thanh tra nhân dân, Ban Thanh tra; Ban Thanh tra</td>
+                        <td>
+                            <div class="action-check">
+                                <input type="checkbox" autocomplete="off" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">3</th>
+                        <td>Thứ 4 <br /> 4/12</td>
+                        <td>09:00 - 17:00: Phòng họp 1 Làm việc với Đoàn giám sát của Ngân hàng Thế giới về Tiến độ công việc năm 2019 và Kế hoạch hoạt động năm 2020 TP: T. Viên (Phó Giám đốc BQLDA), T. Tiệp (VPHV), T. Trung (Ban TCKT), T. Nam (Ban CSVC),
+                            C. Liên (Ban HTQT); Ban Hợp tác quốc tế
+                        </td>
+                        <td>
+                            <div class="action-check">
+                                <input type="checkbox" autocomplete="off" />
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="select-calendar">
+            <label for="event-calendar mt-5"><strong>Chọn lịch muốn thêm:</strong></label>
+            <div class="input-group mb-3">
+                <select class="custom-select" id="event-calendar">
+          <option selected>Chọn lịch...</option>
+          <option value="1">Lịch 1</option>
+          <option value="2">Lịch 2</option>
+          <option value="3">Lịch 3</option>
+        </select>
+                <button class="btn btn-md my-2 my-sm-0 ml-3 primary-color select-event-btn" type="submit">Lấy lịch</button>
+            </div>
+        </div>
+    </div>
+</div>
