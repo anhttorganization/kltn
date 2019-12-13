@@ -45,11 +45,20 @@ export class CalendarService {
       params: new HttpParams().set('code', code),
       responseType: 'json'
     });
+    console.log(res);
     return res;
   }
 
 
-  public
+  public getWorking(token): Observable<any> {
+    const url = AppCommon.baseUrl + '/calendar/working/create';
+    const res = this.http.get(url, {
+      headers: new HttpHeaders().set('Authorization', 'Bearer ' + token),
+      responseType: 'json'
+    });
+    console.log(res);
+    return res;
+  }
 }
 // get(url: string, options: {
 //   headers?: HttpHeaders;
