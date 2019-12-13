@@ -4,6 +4,7 @@ import { CalendarService } from 'src/app/services/calendar.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
+
 @Component({
   selector: 'app-working',
   templateUrl: './working.component.html',
@@ -13,6 +14,8 @@ export class WorkingComponent implements OnInit {
   formdata: FormGroup;
   token: string;
   list: string;
+
+  searchText;
   constructor(
     private calendarService: CalendarService,
     private router: Router,
@@ -79,4 +82,6 @@ export class WorkingComponent implements OnInit {
 
     });
   }
+
+  
 }

@@ -48,8 +48,8 @@ public class ScheduleUtils {
 //		return new ChromeDriver(chrome);
 		
 		ChromeOptions options = new ChromeOptions();
-		options.addArguments("--headless");
-		options.addArguments("--no-sandbox");
+//		options.addArguments("--headless");
+//		options.addArguments("--no-sandbox");
 		String chromePath = prop.getProperty("crawling.chromePath", null);
 		options.setBinary(chromePath);
 		DesiredCapabilities capabilities = new DesiredCapabilities();

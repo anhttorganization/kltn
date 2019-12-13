@@ -1,0 +1,41 @@
+h5.card-title {
+  text-align: center;
+  padding: 10px;
+  background: #357dd0;
+  color: white;
+}
+.card.working-card {
+  width: 600px;
+  margin: 0 auto;
+}
+th.date-table {
+  width: 12%;
+}
+th.stt-table {
+  width: 5%;
+}
+th.action-table {
+  width: 13%;
+}
+.search-result table th {
+  text-align: center;
+}
+.btn span.fa-check {
+  opacity: 0.2;
+}
+.btn.active span.fa-check {
+  opacity: 1;
+}
+.action-check input {
+  width: 20px;
+  height: 20px;
+  display: block;
+  margin: 0 auto;
+}
+.select-event-btn {
+  color: white;
+  font-weight: bold;
+}
+.btn-search {
+  font-weight: bold;
+}

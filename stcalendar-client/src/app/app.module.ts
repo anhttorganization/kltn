@@ -14,6 +14,7 @@ import { LoginServices } from './services/login.services.ts.service';
 import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
       timeOut: 3000,
       positionClass: 'toast-bottom-right'
     }),
+    Ng4LoadingSpinnerModule.forRoot()
   ],
   providers: [LoginServices,
     // {provide: LocationStrategy, useClass: HashLocationStrategy}
