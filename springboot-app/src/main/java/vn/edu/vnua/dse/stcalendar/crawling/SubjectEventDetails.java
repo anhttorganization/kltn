@@ -77,7 +77,7 @@ public final class SubjectEventDetails {
 		// driver.manage().window().setPosition(new Point(-1000, -1000));
 		driver.get(String.format(ScheduleConstant.SCHEDULE_URL, studentId));
 
-		WebDriverWait wait = new WebDriverWait(driver, 5);
+		WebDriverWait wait = new WebDriverWait(driver, 50);
 
 		// check update
 		if (AppUtils.isAlertPresent(driver)) {
@@ -159,6 +159,8 @@ public final class SubjectEventDetails {
 		}
 
 		radio.click();
+		WebDriverWait wait1 = new WebDriverWait(driver, 10000);
+		wait1.until(ExpectedConditions.visibilityOfElementLocated(By.id("ctl00_ContentPlaceHolder1_ctl00_lblNote")));
 		String semesStartDate = (String) jse
 				.executeScript("return semesStart = $('#ctl00_ContentPlaceHolder1_ctl00_lblNote').text()");
 		// get day string
