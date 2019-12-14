@@ -1,10 +1,11 @@
-<form [formGroup]="formdata" (ngSubmit)="onClickSubmit(formdata.value)">
+<!-- <form [formGroup]="formdata" (ngSubmit)="onClickSubmit(formdata.value)"> -->
+<form>
     <div class="card working-card">
         <h5 class="card-title">Lấy lịch công tác</h5>
         <div class="card-body">
             <label for="search">Tìm kiếm :</label>
             <div class="input-group mb-3">
-                <input name="search" type="text" class="form-control" placeholder="Giám đốc Nguyễn Thị Lan" aria-label="search" aria-describedby="basic-addon1">
+                <input [(ngModel)]="searchText" name="search" type="text" class="form-control" placeholder="" aria-label="search" aria-describedby="basic-addon1">
                 <button class="btn btn-md my-2 my-sm-0 ml-3 btn-search" type="submit">Tìm kiếm</button>
             </div>
             <div class="search-result">
@@ -19,21 +20,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let item of list">
+                        <tr *ngFor="let item of list | filter : searchText">
                             <th scope="row"></th>
-                            <td >{{item.day}} 
-                            <td>{{item.start}} - {{item.end}}: {{item.local}}
-                              <div>{{item.content}}</div>
-                              <b>{{item.component}}</b>
-                            </td>
-                            <td>{{item.leadder}}</td>
-                            <td>
-                                <div class="action-check">
-                                    <input type="checkbox" autocomplete="off" />
-                                </div>
-                            </td>
+                            <td>{{item.day}}
+                                <td>{{item.start}} - {{item.end}}: {{item.local}}
+                                    <div>{{item.content}}</div>
+                                    <b>{{item.component}}</b>
+                                </td>
+                                <td>{{item.leadder}}</td>
+                                <td>
+                                    <div class="action-check">
+                                        <input type="checkbox" [checked]="item.isSelected" (change)="updateSelectedList(item)" />
+                                    </div>
+                                </td>
                         </tr>
-               
+
                     </tbody>
                 </table>
             </div>

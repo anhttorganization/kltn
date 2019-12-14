@@ -5,8 +5,10 @@ import { WorkingRoutingModule } from './working-routing.module';
 import { WorkingComponent } from './working.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import {FilterPipe } from './filter.pipe';
+
 @NgModule({
-  declarations: [WorkingComponent],
+  declarations: [WorkingComponent, FilterPipe],
   imports: [
     CommonModule,
     WorkingRoutingModule,FormsModule, ReactiveFormsModule

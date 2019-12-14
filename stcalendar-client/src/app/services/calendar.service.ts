@@ -24,13 +24,13 @@ export class CalendarService {
     return this.http.post(url, body, {
       headers: new HttpHeaders({
         'Content-Type':  'application/json;charset=UTF-8',
-        'Authorization': 'Bearer ' + token
+        Authorization: 'Bearer ' + token
       }),
       responseType: 'json'
     });
   }
 
-  public checkAuth(token:string): Observable<any> {
+  public checkAuth(token: string): Observable<any> {
     const url = AppCommon.baseUrl + '/calendar/check-authorization';
     return this.http.get(url, {
       headers: new HttpHeaders().set('Authorization', 'Bearer ' + token),
@@ -38,7 +38,7 @@ export class CalendarService {
     });
   }
 
-  public getAuth(token, code:string): Observable<any> {
+  public getAuth(token, code: string): Observable<any> {
     const url = AppCommon.baseUrl + '/calendar/authorization';
     const res = this.http.get(url, {
       headers: new HttpHeaders().set('Authorization', 'Bearer ' + token),
@@ -59,7 +59,26 @@ export class CalendarService {
     console.log(res);
     return res;
   }
+
+  public insertEvent(token: string,  calendarId: string, eventList: string) {
+    const url = AppCommon.baseUrl + '/api/calendars/' + calendarId + '/events';
+    const body = eventList;
+
+    return this.http.post(url, body, {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+        'Authorization': 'Bearer ' + token
+      }),
+      observe: 'response', // to display the full response
+      responseType: 'json'
+    });
+  }
+
+
+  
+
 }
+
 // get(url: string, options: {
 //   headers?: HttpHeaders;
 //   observe: 'response';
@@ -67,4 +86,4 @@ export class CalendarService {
 //   reportProgress?: boolean;
 //   responseType?: 'json';
 //   withCredentials?: boolean;
-// }): Observable<HttpResponse<Object>>;
+// }): Observable<HttpResponse<Object>>

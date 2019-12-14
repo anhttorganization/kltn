@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { CalendarService } from 'src/app/services/calendar.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -13,9 +13,12 @@ import { ToastrService } from 'ngx-toastr';
 export class WorkingComponent implements OnInit {
   formdata: FormGroup;
   token: string;
-  list: string;
+  list: any[];
 
-  searchText;
+  searchText: string;
+  isChecked = false;
+  selectedList = [];
+
   constructor(
     private calendarService: CalendarService,
     private router: Router,
@@ -25,10 +28,14 @@ export class WorkingComponent implements OnInit {
   ngOnInit() {
     this.token = localStorage.getItem('token');
 
+
+
+
     this.calendarService.getWorking(this.token).subscribe(res => {
       if (res) {
+        console.log(res);
+        res.map((data, idx) => {data.index = idx, data.isSelected = false; });
         this.list = res;
-        console.log(this.list);
       }
   },
   err => {
@@ -41,6 +48,18 @@ export class WorkingComponent implements OnInit {
   }
 );
   }
+
+  updateSelectedList(event: any) {
+    event.isSelected = !event.isSelected;
+    console.log(event);
+    if (event.isSelected) {
+        this.selectedList.push(event);
+      } else {
+        this.selectedList = this.selectedList.filter(obj => obj.index !== event.index);
+      }
+    console.log(this.selectedList);
+  }
+
 
   onClickSubmit(data) {
     if (this.formdata.controls.studentId.errors || !this.formdata.controls.studentId.value.trim().toLowerCase().match('^[a-z]{3}\\d{2}$')) {
@@ -72,16 +91,16 @@ export class WorkingComponent implements OnInit {
   }
 
   mytoast(msg: string, status: string) {
-    this.toastr.show(msg,null,{
+    this.toastr.show(msg, null, {
       // disableTimeOut: true,
       tapToDismiss: true,
-      toastClass: "toast toast-"+status,
+      toastClass: 'toast toast-' + status,
       closeButton: true,
-      positionClass:'toast-bottom-right',
+      positionClass: 'toast-bottom-right',
       timeOut: 5000,
 
     });
   }
 
-  
+
 }

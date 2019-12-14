@@ -13,7 +13,7 @@ import { AuthComponent } from './theme/layout/auth/auth.component';
 import { LoginServices } from './services/login.services.ts.service';
 import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
-import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { HashLocationStrategy, Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
 
 @NgModule({
@@ -38,7 +38,8 @@ import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
     Ng4LoadingSpinnerModule.forRoot()
   ],
   providers: [LoginServices,
-    // {provide: LocationStrategy, useClass: HashLocationStrategy}
+    // Location,
+    {provide: LocationStrategy, useClass: HashLocationStrategy}
   ],
   bootstrap: [AppComponent]
 })
