@@ -1,24 +1,46 @@
 <div>
-    <form [formGroup]="formdata" (ngSubmit)="onClickSubmit(formdata.value)">
-        <div class="card working-card">
-            <h5 class="card-title">Lấy lịch giảng dạy</h5>
-            <div class="card-body">
-                <label for="search">Mã giảng viên: </label>
-                <div class="input-group mb-3">
-                    <input name="studentId" formControlName="studentId" type="text" class="form-control" placeholder="Giám đốc Nguyễn Thị Lan" aria-label="search" aria-describedby="basic-addon1">
-                </div>
-
-                <div class="select-calendar">
-                    <label for="event-calendar mt-5"><strong>Chọn học kỳ:</strong></label>
-                    <div class="input-group mb-3">
-                        <select class="form-control" id="semester" name="semester" formControlName="semester">
-                      <option *ngFor="let semester of semesterList" [value]="semester.key">
-                        {{ semester.value }}
-                      </option>
-                    </select>
-                        <button class="btn btn-md my-2 my-sm-0 ml-3 primary-color select-event-btn" type="submit">Lấy lịch</button>
-                    </div>
-                </div>
-            </div>
+  <form [formGroup]="formdata" (ngSubmit)="onClickSubmit(formdata.value)">
+    <div class="card working-card">
+      <h5 class="card-title">Lấy thời khóa biểu</h5>
+      <div class="card-body">
+        <label for="search">Mã sinh viên: </label>
+        <div class="input-group mb-3">
+          <input
+            name="studentId"
+            formControlName="studentId"
+            type="text"
+            class="form-control"
+            placeholder=""
+            aria-label="search"
+            aria-describedby="basic-addon1"
+          />
         </div>
-    </form>
+
+        <div class="select-calendar">
+          <label for="event-calendar mt-5"><strong>Chọn học kỳ:</strong></label>
+          <div class="input-group mb-3">
+            <select
+              class="form-control"
+              id="semester"
+              name="semester"
+              formControlName="semester"
+            >
+              <option
+                *ngFor="let semester of semesterList"
+                [value]="semester.key"
+              >
+                {{ semester.value }}
+              </option>
+            </select>
+          </div>
+          <button
+            class="btn btn-md my-2 my-sm-0 ml-3 primary-color select-event-btn"
+            type="submit"
+          >
+            Lấy lịch
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

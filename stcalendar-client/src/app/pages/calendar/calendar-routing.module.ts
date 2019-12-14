@@ -30,7 +30,7 @@ const routes: Routes = [{
     {
       path: 'test',
       loadChildren: () => import('./test/test.module').then(module => module.TestModule)
-    },{
+    }, {
       path: 'auth',
       loadChildren: () => import('./calen-auth/calen-auth.module').then(module => module.CalenAuthModule)
     }

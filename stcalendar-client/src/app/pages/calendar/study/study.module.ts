@@ -10,7 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   declarations: [StudyComponent],
   imports: [
     CommonModule,
-    StudyRoutingModule,FormsModule, ReactiveFormsModule
+    StudyRoutingModule, FormsModule, ReactiveFormsModule
   ]
 })
 export class StudyModule { }

@@ -16,6 +16,10 @@ const routes: Routes = [  {
     {
       path: 'confirm',
       loadChildren: () => import('./confirm/confirm.module').then(module => module.ConfirmModule)
+    },
+    {
+      path: 'profile',
+      loadChildren: () => import('./confirm/confirm.module').then(module => module.ConfirmModule)
     }
   ]
 }];
