@@ -16,7 +16,7 @@ export class AdminComponent implements OnInit {
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
-    //reload
+    // reload
     this.router.navigate(['/'])
   .then(() => {
     window.location.reload();
