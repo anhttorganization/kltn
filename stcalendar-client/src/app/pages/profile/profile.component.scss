@@ -49,9 +49,32 @@ th.action-table {
 .btn-search {
     font-weight: bold;
 }
+
 .row {
     margin-top: 1.5rem;
 }
-.form-group{
+
+.form-group {
     float: left;
+}
+
+input.input-edit {
+    border: 1px solid transparent;
+    margin-top: -1px;
+}
+
+input.input-edit:disabled {
+    background: transparent;
+}
+
+.action-profile {
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.run-bottom {
+    height: 1px;
+    width: 0;
+    background: #cacaca;
+    transition: 0.4s;
 }

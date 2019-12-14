@@ -1,34 +1,57 @@
 <div>
-  <form>
-    <div class="card working-card">
-      <h5 class="card-title">Nguyen Van A</h5>
-      <div class="card-body">
-        <label for="search">Tên tài khoản: </label>
-        <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Tên tài khoản" name="username" formControlName="username"/>
-          <a class="edit_content" role="button" href="#" data-toggle="modal">Chỉnh sửa</a>
+    <form>
+        <div class="card working-card">
+            <h5 class="card-title">Nguyen Van A</h5>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">Họ đệm: </div>
+                    <div class="col-md-4">
+                        <input #inputHoDem type="text" [attr.disabled]="isEditingHoDem ? null : '' " class="input-edit" value="{{hoDemND}}">
+                        <div class="run-bottom" [ngStyle]="bottomAffectHoDem()"></div>
+                    </div>
+                    <div class="col-md-4">
+                        <div [style.color]="isEditingHoDem?'green':'red'" class=" action-profile float-right" (click)="editProfile('hodem-field',inputHoDem.value)">
+                            {{actionHoDem}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">Tên: </div>
+                    <div class="col-md-4">
+                        <input #inputTen type="text" [attr.disabled]="isEditingTen ? null : '' " class="input-edit" value="{{tenND}}">
+                        <div class="run-bottom" [ngStyle]="bottomAffectTen()"></div>
+                    </div>
+                    <div class="col-md-4">
+                        <div [style.color]="isEditingTen?'green':'red'" class=" action-profile float-right" (click)="editProfile('ten-field',inputTen.value)">
+                            {{actionTen}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">Khoa: </div>
+                    <div class="col-md-4">
+                        <input #inputKhoa type="text" [attr.disabled]="isEditingKhoa ? null : '' " class="input-edit" value="{{khoaND}}">
+                        <div class="run-bottom" [ngStyle]="bottomAffectKhoa()"></div>
+                    </div>
+                    <div class="col-md-4">
+                        <div [style.color]="isEditingKhoa?'green':'red'" class=" action-profile float-right" (click)="editProfile('khoa-field',inputKhoa.value)">
+                            {{actionKhoa}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">Lớp: </div>
+                    <div class="col-md-4">
+                        <input #inputLop type="text" [attr.disabled]="isEditingLop ? null : '' " class="input-edit" value="{{lopND}}">
+                        <div class="run-bottom" [ngStyle]="bottomAffectLop()"></div>
+                    </div>
+                    <div class="col-md-4">
+                        <div [style.color]="isEditingLop?'green':'red'" class=" action-profile float-right" (click)="editProfile('lop-field',inputLop.value)">
+                            {{actionLop}}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <label for="search">Họ đệm: </label>
-        <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Tên tài khoản" name="username" formControlName="username"/>
-          <a class="edit_content" role="button" href="#" data-toggle="modal">Chỉnh sửa</a>
-        </div>
-        <label for="search">Tên: </label>
-        <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Tên tài khoản" name="username" formControlName="username"/>
-          <a class="edit_content" role="button" href="#" data-toggle="modal">Chỉnh sửa</a>
-        </div>
-        <label for="search">Lớp: </label>
-        <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Tên tài khoản" name="username" formControlName="username"/>
-          <a class="edit_content" role="button" href="#" data-toggle="modal">Chỉnh sửa</a>
-        </div>
-        <label for="search">Khoa: </label>
-        <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Tên tài khoản" name="username" formControlName="username"/>
-          <a class="edit_content" role="button" href="#" data-toggle="modal">Chỉnh sửa</a>
-        </div>
-      </div>
-    </div>
-  </form>
+    </form>
 </div>
