@@ -1,12 +1,13 @@
 <div>
     <form>
         <div class="card working-card">
-            <h5 class="card-title">Nguyen Van A</h5>
+            
+            <h5 class="card-title">Cài đặt tài khoản</h5>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-4">Họ đệm: </div>
                     <div class="col-md-4">
-                        <input #inputHoDem type="text" [attr.disabled]="isEditingHoDem ? null : '' " class="input-edit" value="{{hoDemND}}">
+                        <input #inputHoDem type="text" [attr.disabled]="isEditingHoDem ? null : '' " class="input-edit" value="{{user?.lastName}}">
                         <div class="run-bottom" [ngStyle]="bottomAffectHoDem()"></div>
                     </div>
                     <div class="col-md-4">
@@ -18,7 +19,7 @@
                 <div class="row">
                     <div class="col-md-4">Tên: </div>
                     <div class="col-md-4">
-                        <input #inputTen type="text" [attr.disabled]="isEditingTen ? null : '' " class="input-edit" value="{{tenND}}">
+                        <input #inputTen type="text" [attr.disabled]="isEditingTen ? null : '' " class="input-edit" value="{{user?.firstName}}">
                         <div class="run-bottom" [ngStyle]="bottomAffectTen()"></div>
                     </div>
                     <div class="col-md-4">
@@ -30,7 +31,7 @@
                 <div class="row">
                     <div class="col-md-4">Khoa: </div>
                     <div class="col-md-4">
-                        <input #inputKhoa type="text" [attr.disabled]="isEditingKhoa ? null : '' " class="input-edit" value="{{khoaND}}">
+                        <input #inputKhoa type="text" [attr.disabled]="isEditingKhoa ? null : '' " class="input-edit" value="{{user?.faculty}}">
                         <div class="run-bottom" [ngStyle]="bottomAffectKhoa()"></div>
                     </div>
                     <div class="col-md-4">
@@ -42,7 +43,7 @@
                 <div class="row">
                     <div class="col-md-4">Lớp: </div>
                     <div class="col-md-4">
-                        <input #inputLop type="text" [attr.disabled]="isEditingLop ? null : '' " class="input-edit" value="{{lopND}}">
+                        <input #inputLop type="text" [attr.disabled]="isEditingLop ? null : '' " class="input-edit" value="{{user?.clazz}}">
                         <div class="run-bottom" [ngStyle]="bottomAffectLop()"></div>
                     </div>
                     <div class="col-md-4">

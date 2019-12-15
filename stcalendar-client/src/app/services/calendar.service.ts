@@ -14,7 +14,11 @@ import { AppCommon } from '../../ultils/ultis';
 export class CalendarService {
   constructor(private http: HttpClient) {}
 
-  public layLichGV(studentId: string, semester: string, token: string): Observable<any> {
+  public layLichGV(
+    studentId: string,
+    semester: string,
+    token: string
+  ): Observable<any> {
     const url = AppCommon.baseUrl + '/calendar/schedule/create';
     const body = {
       studentId,
@@ -23,7 +27,7 @@ export class CalendarService {
 
     return this.http.post(url, body, {
       headers: new HttpHeaders({
-        'Content-Type':  'application/json;charset=UTF-8',
+        'Content-Type': 'application/json;charset=UTF-8',
         Authorization: 'Bearer ' + token
       }),
       responseType: 'json'
@@ -49,7 +53,6 @@ export class CalendarService {
     return res;
   }
 
-
   public getWorking(token): Observable<any> {
     const url = AppCommon.baseUrl + '/calendar/working/create';
     const res = this.http.get(url, {
@@ -60,23 +63,19 @@ export class CalendarService {
     return res;
   }
 
-  public insertEvent(token: string,  calendarId: string, eventList: string) {
+  public insertEvent(token: string, calendarId: string, eventList: string) {
     const url = AppCommon.baseUrl + '/api/calendars/' + calendarId + '/events';
     const body = eventList;
 
     return this.http.post(url, body, {
       headers: new HttpHeaders({
-        'Content-Type':  'application/json',
-        'Authorization': 'Bearer ' + token
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token
       }),
       observe: 'response', // to display the full response
       responseType: 'json'
     });
   }
-
-
-  
-
 }
 
 // get(url: string, options: {
