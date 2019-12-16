@@ -49,3 +49,9 @@ th.action-table {
 .btn-search {
     font-weight: bold;
 }
+
+.search-result {
+    background-color: white;
+    position: absolute;
+    z-index: 1000;
+}

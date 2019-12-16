@@ -1,3 +1,4 @@
+import { WorkingEventVo } from './../pages/calendar/working/model/working-event-vo.model';
 import { Injectable } from '@angular/core';
 import {
   HttpClient,
@@ -60,6 +61,21 @@ export class CalendarService {
     return res;
   }
 
+  public insertWorking
+  (token: string, calendarId: string, workingEventVos: WorkingEventVo[]): Observable<any>{
+    const url = AppCommon.baseUrl + `/working-calendars/${calendarId}/events`;
+    const body = workingEventVos;
+
+    return this.http.post(url, body, {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json;charset=UTF-8',
+        'Authorization': 'Bearer ' + token
+      }),
+      observe: 'response', // to display the full response
+      responseType: 'json'
+    });
+  }
+
   public insertEvent(token: string,  calendarId: string, eventList: string) {
     const url = AppCommon.baseUrl + '/api/calendars/' + calendarId + '/events';
     const body = eventList;
@@ -75,7 +91,21 @@ export class CalendarService {
   }
 
 
-  
+  public getCalendars(token): Observable<any> {
+    const url = AppCommon.baseUrl + '/calendars';
+    const res = this.http.get(url, {
+      headers: new HttpHeaders().set('Authorization', 'Bearer ' + token),
+      responseType: 'json'
+    });
+    console.log(res);
+    return res;
+  }
+
+
+
+
+
+
 
 }
 

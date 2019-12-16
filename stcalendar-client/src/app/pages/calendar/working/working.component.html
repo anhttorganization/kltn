@@ -5,23 +5,23 @@
         <div class="card-body">
             <label for="search">Tìm kiếm :</label>
             <div class="input-group mb-3">
-                <input [(ngModel)]="searchText" name="search" type="text" class="form-control" placeholder="" aria-label="search" aria-describedby="basic-addon1">
-                <button class="btn btn-md my-2 my-sm-0 ml-3 btn-search" type="submit">Tìm kiếm</button>
+                <input (focus)="onFocus()" [(ngModel)]="searchText" name="search" type="text" class="form-control" placeholder="" aria-label="search" aria-describedby="basic-addon1">
+                <button (click)="isShowList=false" class="btn btn-md my-2 my-sm-0 ml-3 btn-search" type="submit">Chọn sự kiện</button>
             </div>
-            <div class="search-result">
-                <table class="table">
+            <div *ngIf="isShowList" class="search-result table-responsive card">
+                <table class="table table-striped">
                     <thead class="thead-light">
                         <tr>
-                            <th scope="col" class="stt-table">STT</th>
-                            <th scope="col" class="date-table">Ngày tháng</th>
-                            <th scope="col" class="event-table">Sự kiện</th>
-                            <th scope="col" class="event-table">Chủ trì</th>
-                            <th scope="col" class="action-table">Hành động</th>
+                            <th scope="col-1" class="stt-table">STT</th>
+                            <th scope="col-1" class="date-table">Ngày tháng</th>
+                            <th scope="col-8" class="event-table">Sự kiện</th>
+                            <th scope="col-1" class="event-table">Chủ trì</th>
+                            <th scope="col-1" class="action-table">Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let item of list | filter : searchText">
-                            <th scope="row"></th>
+                            <th scope="row">{{item.index + 1}}</th>
                             <td>{{item.day}}
                                 <td>{{item.start}} - {{item.end}}: {{item.local}}
                                     <div>{{item.content}}</div>
@@ -41,13 +41,10 @@
             <div class="select-calendar">
                 <label for="event-calendar mt-5"><strong>Chọn lịch muốn thêm:</strong></label>
                 <div class="input-group mb-3">
-                    <select class="custom-select" id="event-calendar">
-                    <option selected>Chọn lịch...</option>
-                    <option value="1">Lịch 1</option>
-                    <option value="2">Lịch 2</option>
-                    <option value="3">Lịch 3</option>
+                    <select (change)="onSelectCalendar($event.target.value)" [(ngModel)]="selectedCalendar" [ngModelOptions]="{standalone: true}" class=" custom-select " id="event-calendar ">
+                    <option *ngFor="let calendar of calendars " [value]="calendar.id ">{{calendar.summary}}</option>
                 </select>
-                    <button class="btn btn-md my-2 my-sm-0 ml-3 primary-color select-event-btn" type="submit">Lấy lịch</button>
+                    <button class="btn btn-md my-2 my-sm-0 ml-3 primary-color select-event-btn " type="submit ">Thêm lịch</button>
                 </div>
             </div>
         </div>
