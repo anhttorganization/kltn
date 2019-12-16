@@ -64,8 +64,7 @@ export class CalendarService {
     return res;
   }
 
-  public insertWorking
-  (token: string, calendarId: string, workingEventVos: WorkingEventVo[]): Observable<any>{
+  public insertWorking(token: string, calendarId: string, workingEventVos: WorkingEventVo[]): Observable<any> {
     const url = AppCommon.baseUrl + `/working-calendars/${calendarId}/events`;
     const body = workingEventVos;
 
