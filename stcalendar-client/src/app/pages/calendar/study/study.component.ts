@@ -97,12 +97,12 @@ export class StudyComponent implements OnInit {
   }
 
   mytoast(msg: string, status: string) {
-    this.toastr.show(msg,null,{
+    this.toastr.show(msg, null, {
       // disableTimeOut: true,
       tapToDismiss: true,
-      toastClass: "toast toast-"+status,
+      toastClass: 'toast toast-' + status,
       closeButton: true,
-      positionClass:'toast-bottom-right',
+      positionClass: 'toast-bottom-right',
       timeOut: 5000,
 
     });

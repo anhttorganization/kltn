@@ -15,7 +15,11 @@ import { AppCommon } from '../../ultils/ultis';
 export class CalendarService {
   constructor(private http: HttpClient) {}
 
-  public layLichGV(studentId: string, semester: string, token: string): Observable<any> {
+  public layLichGV(
+    studentId: string,
+    semester: string,
+    token: string
+  ): Observable<any> {
     const url = AppCommon.baseUrl + '/calendar/schedule/create';
     const body = {
       studentId,
@@ -24,7 +28,7 @@ export class CalendarService {
 
     return this.http.post(url, body, {
       headers: new HttpHeaders({
-        'Content-Type':  'application/json;charset=UTF-8',
+        'Content-Type': 'application/json;charset=UTF-8',
         Authorization: 'Bearer ' + token
       }),
       responseType: 'json'
@@ -49,7 +53,6 @@ export class CalendarService {
     console.log(res);
     return res;
   }
-
 
   public getWorking(token): Observable<any> {
     const url = AppCommon.baseUrl + '/calendar/working/create';
@@ -82,8 +85,8 @@ export class CalendarService {
 
     return this.http.post(url, body, {
       headers: new HttpHeaders({
-        'Content-Type':  'application/json',
-        'Authorization': 'Bearer ' + token
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token
       }),
       observe: 'response', // to display the full response
       responseType: 'json'
@@ -100,13 +103,6 @@ export class CalendarService {
     console.log(res);
     return res;
   }
-
-
-
-
-
-
-
 }
 
 // get(url: string, options: {
