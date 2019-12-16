@@ -10,7 +10,7 @@ import { User } from '../user';
 export class ProfileService {
 
   constructor(private http: HttpClient) { }
-  getProfile(token: string): Observable<User> {
+  public getProfile(token: string): Observable<User> {
     const url = AppCommon.baseUrl + '/me';
     return this.http.get<User>(url, {
       headers: new HttpHeaders().set('Authorization', 'Bearer ' + token)

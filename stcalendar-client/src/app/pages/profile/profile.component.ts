@@ -41,11 +41,12 @@ export class ProfileComponent implements OnInit {
   }
   reloadData() {
     this.token = localStorage.getItem('token');
-    this.profileService.getProfile(this.token).subscribe(data =>{
-        if(data){
-           this.user = data;           
+    // tslint:disable-next-line: no-shadowed-variable
+    this.profileService.getProfile(this.token).subscribe(data => {
+        if (data) {
+           this.user = data;
         }
-      }, errror=>{
+      }, errror => {
         console.log(errror);
       }
     );

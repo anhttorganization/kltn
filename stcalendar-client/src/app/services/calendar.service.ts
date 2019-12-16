@@ -64,15 +64,14 @@ export class CalendarService {
     return res;
   }
 
-  public insertWorking
-  (token: string, calendarId: string, workingEventVos: WorkingEventVo[]): Observable<any>{
+  public insertWorking (token: string, calendarId: string, workingEventVos: WorkingEventVo[]): Observable<any> {
     const url = AppCommon.baseUrl + `/working-calendars/${calendarId}/events`;
     const body = workingEventVos;
 
     return this.http.post(url, body, {
       headers: new HttpHeaders({
         'Content-Type':  'application/json;charset=UTF-8',
-        'Authorization': 'Bearer ' + token
+        Authorization: 'Bearer ' + token
       }),
       observe: 'response', // to display the full response
       responseType: 'json'

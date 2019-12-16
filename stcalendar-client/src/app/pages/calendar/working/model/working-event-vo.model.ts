@@ -1,4 +1,6 @@
-export class WorkingEventVo {
+import { Deserializable } from './../../../../model/deserializable.model';
+export class WorkingEventVo  implements Deserializable{
+
   day: string;
   date: string;
   start: string;
@@ -8,11 +10,8 @@ export class WorkingEventVo {
   component: string;
   leadder: string;
 
-  deserializable(input: any) {
+  deserialize(input: any): this {
     Object.assign(this, input);
-    this.start = input.start;
-    this.end = input.end;
-
     return this;
   }
 }

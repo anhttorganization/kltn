@@ -1,9 +1,12 @@
+import { WorkingEventVo } from './model/working-event-vo.model';
+import { GoogleEvent } from './../model/google-event.model';
 import { GoogleCalendar } from './../../../model/google-calendar.model';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { CalendarService } from 'src/app/services/calendar.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { stringify } from 'querystring';
 
 @Component({
   selector: 'app-working',
@@ -21,6 +24,7 @@ export class WorkingComponent implements OnInit {
   selectedList = [];
   selectedCalendar: string;
   isShowList = false;
+  events: WorkingEventVo[];
 
   constructor(
     private calendarService: CalendarService,
@@ -118,19 +122,18 @@ export class WorkingComponent implements OnInit {
   onClickSubmit() {
     if (!this.selectedList.length) {
       this.mytoast('Không có sự kiện nào được chọn', 'error');
-    } else if (this.formdata.controls.semester.errors) {
+    } else if (!this.selectedCalendar) {
       this.mytoast('Không có calendar nào được chọn', 'error');
     } else {
+      this.events = this.selectedList.map(c => new WorkingEventVo().deserialize(c));
+
       const result = this.calendarService
-        .insertWorking( this.token, this.selectedCalendar, this.selectedList)
+        .insertWorking( this.token, this.selectedCalendar, this.events)
         .subscribe(
           res => {
             console.log(res);
-            if (res && res.message === 'CREATED') {
+            if (res && res.ok) {
               this.mytoast('Thêm lịch thành công', 'success');
-            } else if (res && res.message === 'EXISTED') {
-              this.mytoast('Lịch đã tồn tại', 'success');
-              // this.router.navigate(['auth/login']);
             } else {
               this.mytoast('Thêm lịch thất bại', 'error');
             }
