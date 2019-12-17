@@ -29,6 +29,9 @@ const routes: Routes = [
       }, {
         path: 'user/guide',
         loadChildren: () => import('./pages/guide/guide.module').then(module => module.GuideModule),
+      }, {
+        path: 'user/statistical',
+        loadChildren: () => import('./pages/statistical/statistical.module').then(module => module.StatisticalModule),
       }
     ]
   }, {
