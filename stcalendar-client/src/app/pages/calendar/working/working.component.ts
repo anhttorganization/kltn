@@ -7,6 +7,7 @@ import { CalendarService } from 'src/app/services/calendar.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { stringify } from 'querystring';
+import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 
 @Component({
   selector: 'app-working',
@@ -24,13 +25,17 @@ export class WorkingComponent implements OnInit {
   selectedList = [];
   selectedCalendar: string;
   isShowList = false;
-  events: WorkingEventVo[];
+  events: WorkingEventVo[];//progress_bar_viii.gif
+
 
   constructor(
     private calendarService: CalendarService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinnerService: Ng4LoadingSpinnerService
   ) {
+
+    this.spinnerService.show();
     this.token = localStorage.getItem('token');
 
     this.calendarService.checkAuth(this.token).subscribe(
@@ -51,15 +56,18 @@ export class WorkingComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.spinnerService.show();
     // Lay danh sach lich cong tac
     this.calendarService.getWorking(this.token).subscribe(
       res => {
         if (res) {
+          this.mytoast("Lấy danh sách lịch cán bộ thành công", 'success');
           console.log(res);
           res.map((data, idx) => {
             (data.index = idx), (data.isSelected = false);
           });
           this.list = res;
+
         }
       },
       err => {
@@ -81,6 +89,7 @@ export class WorkingComponent implements OnInit {
         this.calendars = data;
         console.log('calendar: ');
         console.log(this.calendars);
+
       },
       err => {
         console.log(err);
@@ -120,6 +129,8 @@ export class WorkingComponent implements OnInit {
   }
 
   onClickSubmit() {
+    this.spinnerService.show();
+
     if (!this.selectedList.length) {
       this.mytoast('Không có sự kiện nào được chọn', 'error');
     } else if (!this.selectedCalendar) {
@@ -134,8 +145,10 @@ export class WorkingComponent implements OnInit {
             console.log(res);
             if (res && res.ok) {
               this.mytoast('Thêm lịch thành công', 'success');
+              this.reset()
             } else {
               this.mytoast('Thêm lịch thất bại', 'error');
+              this.reset()
             }
           },
           err => {
@@ -150,7 +163,14 @@ export class WorkingComponent implements OnInit {
     }
   }
 
+  reset(){
+    this.isShowList = false;
+    this.selectedList = [];
+    this.list.map(data => data.isSelected = false);
+  }
+
   mytoast(msg: string, status: string) {
+    this.spinnerService.hide();
     this.toastr.show(msg, null, {
       // disableTimeOut: true,
       tapToDismiss: true,
