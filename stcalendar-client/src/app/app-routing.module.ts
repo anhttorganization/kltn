@@ -21,11 +21,17 @@ const routes: Routes = [
         path: 'user',
         loadChildren: () => import('./home/home.module').then(module => module.HomeModule),
       }, {
-        path: 'profile',
+        path: 'user/profile',
         loadChildren: () => import('./pages/profile/profile.module').then(module => module.ProfileModule),
       }, {
         path: 'calendar',
         loadChildren: () => import('./pages/calendar/calendar.module').then(module => module.CalendarModule),
+      }, {
+        path: 'user/guide',
+        loadChildren: () => import('./pages/guide/guide.module').then(module => module.GuideModule),
+      }, {
+        path: 'user/statistical',
+        loadChildren: () => import('./pages/statistical/statistical.module').then(module => module.StatisticalModule),
       }
     ]
   }, {
@@ -54,7 +60,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { useHash: true })],
+  imports: [RouterModule.forRoot(routes)],//, { useHash: true }
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

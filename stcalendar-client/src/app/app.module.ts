@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AdminComponent } from './theme/layout/admin/admin.component';
@@ -15,6 +16,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import { HashLocationStrategy, Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,7 @@ import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
     UserComponent,
     AppNavBarComponent,
     BreadscrumbComponent,
-    AuthComponent,
+    AuthComponent
   ],
   imports: [
     BrowserModule,
@@ -31,6 +33,8 @@ import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
     BrowserAnimationsModule,
     MaterialModule,
     HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
     ToastrModule.forRoot({
       timeOut: 3000,
       positionClass: 'toast-bottom-right'
@@ -39,7 +43,7 @@ import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
   ],
   providers: [LoginServices,
     // Location,
-    {provide: LocationStrategy, useClass: HashLocationStrategy}
+    // {provide: LocationStrategy, useClass: HashLocationStrategy}
   ],
   bootstrap: [AppComponent]
 })

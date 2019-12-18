@@ -49,3 +49,9 @@ th.action-table {
 .btn-search {
     font-weight: bold;
 }
+.card.working-card {
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    transform: translateX(-50%) translateY(-50%);
+}

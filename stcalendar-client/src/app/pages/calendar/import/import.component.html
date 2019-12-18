@@ -1,22 +1,17 @@
-<div>
-  <form>
-    <div class="card working-card">
-      <h5 class="card-title">Import file excel</h5>
-      <u>Tải file mẫu ở đây</u>
-      <div>
-        <div class="row">
-          <div class="col-md-6 offset-md-3">
-            <div class="form-group">
-              <input type="file" name="image" />
+<div class="import-excel-class">
+    <form>
+        <div class="card working-card">
+            <h5 class="card-title">Import File Excel</h5>
+            <div class="card-body">
+                <a class="mb-3 d-block" href="#">Tải file mẫu tại đây</a>
+                <div class="input-group mb-1">
+                    <input (change)="inputExcelChanged($event)" type="file" class="custom-file-input input-excel-upload" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+                    <label class="custom-file-label" for="inputGroupFile01">{{fileName}}</label>
+                </div>
+                <button class="btn float-right btn-md primary-color select-event-btn mt-3" type="submit">Lấy
+                  lịch</button>
             </div>
-            <button
-              class="btn btn-md my-2 my-sm-0 ml-3 primary-color select-event-btn"
-              type="submit"
-            >Upload
-            </button>
-          </div>
+
         </div>
-      </div>
-    </div>
-  </form>
+    </form>
 </div>

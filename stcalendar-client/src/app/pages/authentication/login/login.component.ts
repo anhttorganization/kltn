@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { AppCommon } from '../../../../ultils/ultis';
 import { ToastrService } from 'ngx-toastr';
 import { ShareMessageService } from 'src/app/services/share-message.service';
+import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
+
 
 @Component({
   selector: 'app-login',
@@ -21,6 +23,7 @@ export class LoginComponent implements OnInit {
     private loginServices: LoginServices,
     private router: Router,
     private toastr: ToastrService,
+    private spinnerService: Ng4LoadingSpinnerService
     // private  shareMessageService : ShareMessageService
   ) {}
 
@@ -38,6 +41,8 @@ export class LoginComponent implements OnInit {
   }
 
   doLogin() {
+    this.spinnerService.show();
+
     this.loginServices
       .login(this.username, this.password)
       .subscribe(res => {
@@ -65,32 +70,35 @@ export class LoginComponent implements OnInit {
               localStorage.setItem('refreshToken', res.refreshToken);
               localStorage.setItem('user', JSON.stringify( payload.user));
 
-
+              this.spinnerService.hide();
               this.router.navigate(['']);
               // this.toastr.success('Đăng nhập thành công!', 'Success');
               this.mytoast('Đăng nhập thành công!', 'success');
 
               break;
             default:
-                this.mytoast('Đăng nhập không thành công!', 'error');
+              this.spinnerService.hide();
+              this.mytoast('Đăng nhập không thành công!', 'error');
 
               // this.toastr.success('Đăng nhập không thành công!', 'Error');
           }
 
-        }else{
-            this.mytoast('Đăng nhập không thành công!', 'error');
+        } else {
+          this.spinnerService.hide();
+          this.mytoast('Đăng nhập không thành công!', 'error');
           }
       }, err => {
+        this.spinnerService.hide();
         this.mytoast('Tài khoản hoặc mật khẩu không chính xác', 'error');
     });
   }
 mytoast(msg: string, status: string) {
-    this.toastr.show(msg,null,{
+    this.toastr.show(msg, null, {
       // disableTimeOut: true,
       tapToDismiss: true,
-      toastClass: "toast toast-"+status,
+      toastClass: 'toast toast-' + status,
       closeButton: true,
-      positionClass:'toast-bottom-right',
+      positionClass: 'toast-bottom-right',
       timeOut: 5000,
 
     });

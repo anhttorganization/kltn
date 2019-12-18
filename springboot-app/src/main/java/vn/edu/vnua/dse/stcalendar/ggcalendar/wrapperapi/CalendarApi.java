@@ -2,6 +2,7 @@ package vn.edu.vnua.dse.stcalendar.ggcalendar.wrapperapi;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -106,11 +107,8 @@ public class CalendarApi {
 
 	public String getAccessToken(String refresh_token) {
 		String url = "https://www.googleapis.com/oauth2/v4/token";
-		List<NameValuePair> forms = Form.form()
-				.add("refresh_token", refresh_token)
-				.add("client_id", clientID)
-				.add("client_secret", clientSecret)
-				.add("grant_type", "refresh_token").build();
+		List<NameValuePair> forms = Form.form().add("refresh_token", refresh_token).add("client_id", clientID)
+				.add("client_secret", clientSecret).add("grant_type", "refresh_token").build();
 
 		String result = APIService.PostResult(url, forms);
 		System.out.println("-------------------------------");
@@ -268,7 +266,25 @@ public class CalendarApi {
 
 		return event;
 	}
-	
+
+	public List<GoogleEvent> insertEvents(String calendarId, List<GoogleEvent> eventList) {
+		String url = "https://www.googleapis.com/calendar/v3/calendars/%s/events";
+		url = String.format(url, calendarId);
+
+		List<GoogleEvent> insertedList = new ArrayList<GoogleEvent>();
+		for (GoogleEvent event : eventList) {
+
+			Gson gson = getDateTimeParseGson();
+			String eventJson = gson.toJson(event);
+
+			String result = APIService.PostResult(url, accessToken, eventJson);
+			gson = new Gson();
+			event = gson.fromJson(result, GoogleEvent.class);
+			insertedList.add(event);
+		}
+		return insertedList;
+	}
+
 	public GoogleEvent insertEvent(String calendarId, String eventJson) {
 		String url = "https://www.googleapis.com/calendar/v3/calendars/%s/events";
 		url = String.format(url, calendarId);
@@ -278,9 +294,10 @@ public class CalendarApi {
 		String result = APIService.PostResult(url, accessToken, eventJson);
 		gson = new Gson();
 		GoogleEvent event = gson.fromJson(result, GoogleEvent.class);
-		
+
 		return event;
 	}
+
 	// update
 	public GoogleEvent updateEvent(String calendarId, String eventID, String summary, GoogleDateTime start,
 			GoogleDateTime end, List<String> recurrence, String description, String location) {

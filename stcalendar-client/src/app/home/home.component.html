@@ -1,5 +1,5 @@
 <!--Sinh vien-->
-<div class="container">
+<div class="container" *ngIf="roleFromUser">
     <div class="row row-calendar">
         <div class="col-md-3 col-sm-6 card-calendar mt-4">
             <div class="card">
@@ -27,7 +27,7 @@
             <div class="card">
                 <img class="card-img-top" src="https://cdn0.iconfinder.com/data/icons/files-documents-12/128/file_1_xlsx_excel_document_upload-29-512.png" alt="Card image cap" />
                 <div class="card-body">
-                    <h4 class="card-title" routerLink="/calendar/import"><a >Import lịch</a></h4>
+                    <h4 class="card-title" routerLink="/calendar/import"><a>Import lịch</a></h4>
                     <p class="card-text">
                         Thêm thời khóa biểu từ file excel vào lịch trên Google Calendar.
                     </p>
@@ -38,9 +38,9 @@
             <div class="card">
                 <img class="card-img-top" src="https://cdn4.iconfinder.com/data/icons/small-n-flat/24/calendar-512.png" alt="Card image cap" />
                 <div class="card-body">
-                    <h4 class="card-title"><a>Thống kê</a></h4>
+                    <h4 class="card-title" routerLink="user/statistical"><a>Thống kê</a></h4>
                     <p class="card-text">
-                      Thồng kê số học phần, tín chỉ theo từng lịch, từng học kỳ.
+                        Thồng kê số học phần, tín chỉ theo từng lịch, từng học kỳ.
                     </p>
                 </div>
             </div>
