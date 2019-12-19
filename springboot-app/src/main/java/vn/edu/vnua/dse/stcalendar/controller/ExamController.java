@@ -9,7 +9,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,17 +18,18 @@ import org.springframework.web.bind.annotation.RestController;
 import vn.edu.vnua.dse.stcalendar.common.AppConstant;
 import vn.edu.vnua.dse.stcalendar.common.AppUtils;
 import vn.edu.vnua.dse.stcalendar.common.CustomStatusCode;
+import vn.edu.vnua.dse.stcalendar.crawling.ExamEventDetails;
 import vn.edu.vnua.dse.stcalendar.crawling.SubjectEventDetails;
 import vn.edu.vnua.dse.stcalendar.exceptions.CustomException;
 import vn.edu.vnua.dse.stcalendar.ggcalendar.jsonobj.GoogleCalendar;
-import vn.edu.vnua.dse.stcalendar.ggcalendar.jsonobj.GoogleEventList;
+import vn.edu.vnua.dse.stcalendar.ggcalendar.jsonobj.GoogleEvent;
 import vn.edu.vnua.dse.stcalendar.ggcalendar.wrapperapi.CalendarApi;
 import vn.edu.vnua.dse.stcalendar.ggcalendar.wrapperapi.CalendarConstant;
 import vn.edu.vnua.dse.stcalendar.model.Calendar;
 import vn.edu.vnua.dse.stcalendar.model.CalendarDetail;
 import vn.edu.vnua.dse.stcalendar.model.Event;
+import vn.edu.vnua.dse.stcalendar.model.ExamEvent;
 import vn.edu.vnua.dse.stcalendar.model.Semester;
-import vn.edu.vnua.dse.stcalendar.model.StudyEvent;
 import vn.edu.vnua.dse.stcalendar.model.Types;
 import vn.edu.vnua.dse.stcalendar.model.User;
 import vn.edu.vnua.dse.stcalendar.repository.CalendarDetailRepository;
@@ -37,42 +37,35 @@ import vn.edu.vnua.dse.stcalendar.repository.CalendarRepository;
 import vn.edu.vnua.dse.stcalendar.repository.EventRepository;
 import vn.edu.vnua.dse.stcalendar.repository.SemesterRepository;
 import vn.edu.vnua.dse.stcalendar.repository.UserRepository;
-import vn.edu.vnua.dse.stcalendar.service.ScheduleService;
+import vn.edu.vnua.dse.stcalendar.service.ExamService;
 import vn.edu.vnua.dse.stcalendar.service.UserService;
 import vn.edu.vnua.dse.stcalendar.vo.CalendarAndEventsResponse;
-import vn.edu.vnua.dse.stcalendar.vo.ScheduleEventVo;
+import vn.edu.vnua.dse.stcalendar.vo.ExamEventVo;
 import vn.edu.vnua.dse.stcalendar.vo.ScheduleCreate;
-import vn.edu.vnua.dse.stcalendar.vo.ScheduleEventsResult;
 
 @RestController
 @CrossOrigin
-public class ScheduleController {
+public class ExamController {
 
     @Autowired
     CalendarRepository calendarRepository;
-
     @Autowired
     CalendarDetailRepository calendarDetailRepository;
-
     @Autowired
     EventRepository eventRepository;
-
     @Autowired
     CalendarApi calendarApi;
-
     @Autowired
     UserService userService;
-
     @Autowired
     UserRepository userRepository;
-
     @Autowired
-    ScheduleService scheduleService;
+    ExamService examService;
 
     @Autowired
     SemesterRepository semesterRepository;
 
-    @RequestMapping(value = "api/calendar/schedule/create", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "api/exam-calendars/", method = RequestMethod.POST, produces = "+")
     public ResponseEntity<CalendarAndEventsResponse> create(@RequestBody ScheduleCreate scheduleCreate) {
 
 	String studentId = scheduleCreate.getStudentId();
@@ -81,7 +74,6 @@ public class ScheduleController {
 	if (AppUtils.isNullOrEmpty(studentId)) {
 	    throw new CustomException("Mã sinh viên rỗng");
 	}
-
 	if (AppUtils.isNullOrEmpty(semesterId)) {
 	    throw new CustomException("Học kỳ rỗng");
 	}
@@ -97,11 +89,11 @@ public class ScheduleController {
 		    ScheduleController.class + ": Lỗi khi tạo đối tượng calendarApi" + e.getMessage());
 	}
 
-	// 1. Kiểm tra xem thời khóa biểu với mã sinh viên nhập vào đã được thêm chưa
+	// 1. Kiểm tra xem thời lich thi với mã sinh viên nhập vào đã được thêm chưa
 	// find
-	Optional<List<Calendar>> calenOptional = calendarRepository.findByStudentIdAndTypeAndUserId(studentId, false,
+	Optional<List<Calendar>> calenOptional = calendarRepository.findByStudentIdAndTypeAndUserId(studentId, true,
 		user.getId());
-                                                                                                                                            
+
 	// Nếu không có lịch với mã sinh viên được thêm
 	if (!calenOptional.isPresent()) {
 	    return addCalendar(scheduleCreate, user);
@@ -126,7 +118,15 @@ public class ScheduleController {
 	CalendarDetail calendarDetail = detailOptional.get();
 	return handlingChanges(calendarDetail, scheduleCreate, calendar);
 
-//		return null;
+    }
+
+    private ResponseEntity<CalendarAndEventsResponse> handlingChanges(CalendarDetail calendarDetail,
+	    ScheduleCreate scheduleCreate, Calendar calendar) {
+	String summary = AppConstant.SCHEDULE_SUMMARY + scheduleCreate.getStudentId();
+
+	GoogleCalendar ggcalen = new GoogleCalendar(calendar.getCalendarId(), summary, CalendarConstant.TIME_ZONE);
+
+	return ResponseEntity.ok().body(new CalendarAndEventsResponse(CustomStatusCode.EXISTED, ggcalen, null));
     }
 
     /**
@@ -136,6 +136,51 @@ public class ScheduleController {
      * @param semester  ma hoc ky
      * @return Đối tượng lịch sau khi thêm
      */
+    private ResponseEntity<CalendarAndEventsResponse> addEvents(Calendar calendar, ScheduleCreate scheduleCreate) {
+	// insert calendar mới trên google
+	String studentId = scheduleCreate.getStudentId();
+	String semesterId = scheduleCreate.getSemester();
+	// Kiem tra, lay thong tin hoc ky trong db
+	Semester semester = semesterRepository.getOne(semesterId);
+	if (semester == null) {
+	    throw new CustomException("Không tồn tại học kỳ đã nhập");
+	}
+
+	List<ExamEventVo> examEventVos = ExamEventDetails.getEventsFromSchedule(studentId);
+
+	String summary = AppConstant.TEST_SCHEDULE_SUMMARY + studentId;
+	GoogleCalendar googleCalendar = new GoogleCalendar(calendar.getCalendarId(), summary,
+		CalendarConstant.TIME_ZONE);
+
+	List<ExamEventVo> insertedEventVos = examService.insert(calendarApi, googleCalendar.getId(), examEventVos);
+	// chuyen ket qua da insert sang kieu GoogleEvent de return
+	List<GoogleEvent> googleEvents = ExamEventDetails.toGoogleEvents(insertedEventVos);
+
+	HashSet<Event> events = new HashSet<>();
+	// chuyen sang kieu Event de luu vao db
+	for (ExamEventVo eventVo : insertedEventVos) {
+	    ExamEvent examEvent = ExamEvent.builder().subjectCode(eventVo.getSubjectCode())
+		    .combined(eventVo.getCombined()).examTeam(eventVo.getExamTeam()).build();
+
+	    Event event = new Event(eventVo.getEventId(), examEvent, Types.EXAM);
+	    events.add(event);
+	}
+
+	String scheduleHash = SubjectEventDetails.scheduleHash;
+	// insert to db
+	CalendarDetail calendarDetail = new CalendarDetail(semester, scheduleHash, events);
+	calendar.addCalendarDetails(calendarDetail);
+
+	try {
+	    calendarRepository.save(calendar);
+	} catch (Exception e) {
+	    throw new CustomException("Không insert được calendar vào database " + e.getMessage());
+	}
+
+	return ResponseEntity.ok()
+		.body(new CalendarAndEventsResponse(CustomStatusCode.CREATED, googleCalendar, googleEvents));
+    }
+
     private ResponseEntity<CalendarAndEventsResponse> addCalendar(ScheduleCreate scheduleCreate, User user) {
 
 	// insert calendar mới trên google
@@ -146,49 +191,32 @@ public class ScheduleController {
 	if (semester == null) {
 	    throw new CustomException("Không tồn tại học kỳ đã nhập");
 	}
-	
-	ScheduleEventsResult result = SubjectEventDetails.getEventsFromSchedule(studentId, semester);
-	List<ScheduleEventVo> eventDetailVos = result.getSubjectEvents();
-	List<String> weekEvents = result.getWeekEvents();
 
-	String summary = AppConstant.SCHEDULE_SUMMARY + studentId;
+	List<ExamEventVo> examEventVos = ExamEventDetails.getEventsFromSchedule(studentId);
 
-	GoogleCalendar ggcalen = calendarApi.insertCalendar(summary, CalendarConstant.TIME_ZONE);
+	String summary = AppConstant.TEST_SCHEDULE_SUMMARY + studentId;
 
-	List<ScheduleEventVo> insertedEventVos = scheduleService.insert(calendarApi, ggcalen.getId(), eventDetailVos);
-	GoogleEventList eventList = new GoogleEventList();
-	eventList.setItems(SubjectEventDetails.toGoogleEvents(eventDetailVos,
-		userService.getUseContextDetail().getRoles().iterator().next().getName()));
+	GoogleCalendar googleCalendar = calendarApi.insertCalendar(summary, CalendarConstant.TIME_ZONE);
+
+	List<ExamEventVo> insertedEventVos = examService.insert(calendarApi, googleCalendar.getId(), examEventVos);
+	// chuyen ket qua da insert sang kieu GoogleEvent de return
+	List<GoogleEvent> googleEvents = ExamEventDetails.toGoogleEvents(insertedEventVos);
 
 	HashSet<Event> events = new HashSet<>();
+	// chuyen sang kieu Event de luu vao db
+	for (ExamEventVo eventVo : insertedEventVos) {
+	    ExamEvent examEvent = ExamEvent.builder().subjectCode(eventVo.getSubjectCode())
+		    .combined(eventVo.getCombined()).examTeam(eventVo.getExamTeam()).build();
 
-	// convert to event và lưu vào db
-	for (ScheduleEventVo detailVo : insertedEventVos) {
-	    StudyEvent studyEvent = StudyEvent.builder()
-		    .subjectCode(detailVo.getSubjectId())
-		    .subjectGroup(detailVo.getSubjectGroup())
-		    .clazz(detailVo.getClazz())
-		    .practiceGroup(detailVo.getPracticeGroup())
-		    .credit(detailVo.getCredit())
-		    .build();
-	    
-	    Types type;
-	    if(user.getRoles().iterator().next().getName().equals("ROLE_STUDENT")) {
-		type = Types.STUDY;
-	    }else {
-		type = Types.TEACHING;
-	    }
-	    Event evt = new Event(detailVo.getEventId(), studyEvent, type);
-	    events.add(evt);
+	    Event event = new Event(eventVo.getEventId(), examEvent, Types.EXAM);
+	    events.add(event);
 	}
-	
-	scheduleService.insertByJson(calendarApi, ggcalen.getId(), weekEvents);
-	String scheduleHash = SubjectEventDetails.scheduleHash;//
 
+	String scheduleHash = SubjectEventDetails.scheduleHash;
 	// insert to db
 	CalendarDetail calendarDetail = new CalendarDetail(semester, scheduleHash, events);
-//		calendarDetail.setScheduleHash(SubjectEventDetails.scheduleHash);
-	Calendar calendar = new Calendar(user, studentId, ggcalen.getId(), false, new Date(), new Date(),
+//			calendarDetail.setScheduleHash(SubjectEventDetails.scheduleHash);
+	Calendar calendar = new Calendar(user, studentId, googleCalendar.getId(), false, new Date(), new Date(),
 		calendarDetail);
 
 	try {
@@ -196,97 +224,26 @@ public class ScheduleController {
 	} catch (Exception e) {
 	    throw new CustomException("Không insert dc calendar vào db " + e.getMessage());
 	}
+
 	return ResponseEntity.ok()
-		.body(new CalendarAndEventsResponse(CustomStatusCode.CREATED, ggcalen, eventList.getItems()));
+		.body(new CalendarAndEventsResponse(CustomStatusCode.CREATED, googleCalendar, googleEvents));
     }
 
-    /**
-     * Hàm thêm một các sự kiện mới vào calendar đã có
-     * 
-     * @param studentId  mã sinh viên/ giảng viên
-     * @param semesterId ma hoc ky
-     * @param calendar   đối tượng lịch
-     * @return Đối tượng lịch sau khi thêm
-     */
-    private ResponseEntity<CalendarAndEventsResponse> addEvents(Calendar calendar, ScheduleCreate scheduleCreate) {
-	String studentId = scheduleCreate.getStudentId();
-	String semesterId = scheduleCreate.getSemester();
-	// Kiem tra, lay thong tin hoc ky trong db
-	Semester semester = semesterRepository.getOne(semesterId);
-	if (semester == null) {
-	    throw new CustomException("Không tồn tại học kỳ đã nhập");
-	}
-
-	ScheduleEventsResult result = SubjectEventDetails.getEventsFromSchedule(studentId, semester);
-	List<ScheduleEventVo> eventDetailVos = result.getSubjectEvents();
-	List<String> weekEvents = result.getWeekEvents();
-
-	List<ScheduleEventVo> insertedEventVos = scheduleService.insert(calendarApi, calendar.getCalendarId(),
-		eventDetailVos);
-	GoogleEventList eventList = new GoogleEventList();
-	eventList.setItems(SubjectEventDetails.toGoogleEvents(eventDetailVos,
-		userService.getUseContextDetail().getRoles().iterator().next().getName()));
-
-	HashSet<Event> events = new HashSet<>();
-
-	// convert to event và lưu vào db
-	for (ScheduleEventVo detailVo : insertedEventVos) {
-	    StudyEvent studyEvent = StudyEvent.builder()
-		    .subjectCode(detailVo.getSubjectId())
-		    .subjectGroup(detailVo.getSubjectGroup())
-		    .clazz(detailVo.getClazz())
-		    .practiceGroup(detailVo.getPracticeGroup())
-		    .credit(detailVo.getCredit())
-		    .build();
-	    
-	    Event evt = new Event(detailVo.getEventId(), studyEvent, Types.STUDY);
-	    events.add(evt);
-	}
-
-	String summary = AppConstant.SCHEDULE_SUMMARY + studentId;
-	GoogleCalendar ggcalen = new GoogleCalendar(calendar.getCalendarId(), summary, CalendarConstant.TIME_ZONE);
-
-	scheduleService.insertByJson(calendarApi, ggcalen.getId(), weekEvents);
-	String scheduleHash = SubjectEventDetails.scheduleHash;//
-
-	// insert to db
-	CalendarDetail calendarDetail = new CalendarDetail(semester, scheduleHash, events);
-	calendar.addCalendarDetails(calendarDetail);
-
-	try {
-	    calendarRepository.save(calendar);
-	} catch (Exception e) {
-	    throw new CustomException("Không insert dc calendar vào db " + e.getMessage());
-	}
-	return ResponseEntity.ok()
-		.body(new CalendarAndEventsResponse(CustomStatusCode.CREATED, ggcalen, eventList.getItems()));
-    }
-
-    /**
-     * Hàm loại bỏ các calendar trùng lặp/lỗi trong database
-     * 
-     * @param studentId  mã sinh viên/ giảng viên
-     * @param semesterId ma hoc ky
-     * @param calendar   đối tượng lịch
-     * @return Calendar hợp lệ
-     */
     private Calendar filterCalendar(List<Calendar> calendars) {
 	ArrayList<Calendar> results = new ArrayList<>();
 	for (Calendar calendar : calendars) { // tìm số calendars tồn tại trên cả db và google
 	    if (calendar != null) {
-		String calendarId = calendar.getCalendarId(); // kiểm tra xem calendar còn trên calendar list cua nguoi
-							      // dung
-		// khong
+		String calendarId = calendar.getCalendarId(); // kiểm tra xem calendar còn trên calendar list cua nguoi dung khong
 		GoogleCalendar googleCalendar = calendarApi.findCalendarInCalendarList(calendarId);
 		// Nếu lịch nào chỉ có trong db mà không có trên GGCalendar thì xóa trong db
 		if (googleCalendar == null) {
-//					results.remove(calendar);
 		    calendarRepository.delete(calendar);
 		} else {
 		    results.add(calendar);
 		}
 	    }
 	}
+
 	if (results.size() == 0) {
 	    return null;
 	}
@@ -299,18 +256,4 @@ public class ScheduleController {
 
     }
 
-    /**
-     * Xử lý thay đổi, cập nhật lịch
-     * 
-     * @param calendarDetail đối tượng chứa các sự kiện của một học kỳ
-     * @return Calendar hợp lệ
-     */
-    private ResponseEntity<CalendarAndEventsResponse> handlingChanges(CalendarDetail calendarDetail,
-	    ScheduleCreate scheduleCreate, Calendar calendar) {
-	String summary = AppConstant.SCHEDULE_SUMMARY + scheduleCreate.getStudentId();
-
-	GoogleCalendar ggcalen = new GoogleCalendar(calendar.getCalendarId(), summary, CalendarConstant.TIME_ZONE);
-
-	return ResponseEntity.ok().body(new CalendarAndEventsResponse(CustomStatusCode.EXISTED, ggcalen, null));
-    }
 }

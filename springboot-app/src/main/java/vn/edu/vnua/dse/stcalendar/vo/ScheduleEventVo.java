@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EventDetailVo {
+public class ScheduleEventVo {
 	private Long id;
 
 	private String eventId;

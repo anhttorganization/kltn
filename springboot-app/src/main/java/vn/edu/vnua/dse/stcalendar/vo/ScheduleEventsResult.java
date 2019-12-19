@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ScheduleEventsResult {
-	private List<EventDetailVo> subjectEvents;
+	private List<ScheduleEventVo> subjectEvents;
 	private List<String> weekEvents;
 }

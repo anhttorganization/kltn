@@ -14,7 +14,7 @@ import vn.edu.vnua.dse.stcalendar.model.Semester;
 import vn.edu.vnua.dse.stcalendar.repository.SemesterRepository;
 import vn.edu.vnua.dse.stcalendar.service.ScheduleService;
 import vn.edu.vnua.dse.stcalendar.service.UserService;
-import vn.edu.vnua.dse.stcalendar.vo.EventDetailVo;
+import vn.edu.vnua.dse.stcalendar.vo.ScheduleEventVo;
 import vn.edu.vnua.dse.stcalendar.vo.ScheduleCreate;
 import vn.edu.vnua.dse.stcalendar.vo.ScheduleEventsResult;
 
@@ -38,10 +38,10 @@ public class ScheduleServiceImpl implements ScheduleService {
 	}
 
 	@Override
-	public List<EventDetailVo> insert(CalendarApi calendarApi, String calenId, ScheduleCreate scheduleCreate) {
+	public List<ScheduleEventVo> insert(CalendarApi calendarApi, String calenId, ScheduleCreate scheduleCreate) {
 
 		String semesterId = scheduleCreate.getSemester();
-		List<EventDetailVo> insertedEvents = new ArrayList<EventDetailVo>();
+		List<ScheduleEventVo> insertedEvents = new ArrayList<ScheduleEventVo>();
 		Semester semester = semesterRepository.findById(semesterId)
 				.orElseThrow(() -> new CustomException("Không tìm thấy Học kỳ với id " + semesterId));
 
@@ -50,7 +50,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 		insertedEvents = result.getSubjectEvents();
 
 		// Thêm sự kiện môn học
-		for (EventDetailVo eventDetailVo : insertedEvents) {
+		for (ScheduleEventVo eventDetailVo : insertedEvents) {
 			GoogleEvent googleEvent = SubjectEventDetails.toGoogleEvent(eventDetailVo, userService.getUseContextDetail().getRoles().iterator().next().getName());
 			GoogleEvent insertResult = calendarApi.insertEvent(calenId, googleEvent);
 			if (insertResult == null) {
@@ -66,11 +66,10 @@ public class ScheduleServiceImpl implements ScheduleService {
 	}
 
 	@Override
-	public List<EventDetailVo> insert(CalendarApi calendarApi, String calenId, List<EventDetailVo> eventDetailVos) {
-		List<EventDetailVo> insertedEvents = new ArrayList<EventDetailVo>();
-		insertedEvents = eventDetailVos;
+	public List<ScheduleEventVo> insert(CalendarApi calendarApi, String calenId, List<ScheduleEventVo> eventDetailVos) {
+		List<ScheduleEventVo> insertedEvents =  eventDetailVos;
 		// Thêm sự kiện môn học
-		for (EventDetailVo eventDetailVo : insertedEvents) {
+		for (ScheduleEventVo eventDetailVo : insertedEvents) {
 			GoogleEvent googleEvent = SubjectEventDetails.toGoogleEvent(eventDetailVo, userService.getUseContextDetail().getRoles().iterator().next().getName());
 			GoogleEvent insertResult = calendarApi.insertEvent(calenId, googleEvent);
 			if (insertResult == null) {

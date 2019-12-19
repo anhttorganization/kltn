@@ -1,7 +1,6 @@
 package vn.edu.vnua.dse.stcalendar.crawling;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,141 +12,223 @@ import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import com.google.gson.Gson;
 
 import vn.edu.vnua.dse.stcalendar.common.AppUtils;
+import vn.edu.vnua.dse.stcalendar.exceptions.CustomException;
 import vn.edu.vnua.dse.stcalendar.ggcalendar.jsonobj.GoogleDateTime;
 import vn.edu.vnua.dse.stcalendar.ggcalendar.jsonobj.GoogleEvent;
 import vn.edu.vnua.dse.stcalendar.ggcalendar.wrapperapi.CalendarConstant;
-import vn.edu.vnua.dse.stcalendar.vo.ScheduleResult;
+import vn.edu.vnua.dse.stcalendar.vo.ExamEventVo;
 
 public class ExamEventDetails {
-	private static final String DESCRIPTION = "Mã học phần: %s" + "\nNhóm: %s" + "\nTổ: %s";
+    private static String message = "";
+    private static final String DESCRIPTION = "Mã học phần: %s" + "\nNhóm: %s" + "\nTổ: %s";
 
-	// lấy danh dách các event từ lịch thi
-	public static final ScheduleResult<List<GoogleEvent>> getEventsFromSchedule(String studentId)
-			throws IOException, ParseException, NoSuchAlgorithmException {
-		ScheduleResult<ArrayList<String>> examScheduleResult = getExamSchedule(studentId);
-		ArrayList<String> examScheduleJson = examScheduleResult.getResult();
+    // lấy danh dách các event từ lịch thi
+    public static final List<ExamEventVo> getEventsFromSchedule(String studentId){
+	
+	ArrayList<ArrayList<String>> examScheduleJson = getExamSchedule(studentId);
+	
+	return toEventDetailVos(examScheduleJson);
+	
+    }
 
-		if(examScheduleResult.isStatus()) {
-			if (examScheduleJson.size() > 0) {
-				// return toGoogleEvent(scheduleJson);
-				return new ScheduleResult<List<GoogleEvent>>(true, toGoogleEvent(examScheduleJson), examScheduleResult.getMessage(), examScheduleResult.getScheduleHash());	
-			}else {
-				return new ScheduleResult<List<GoogleEvent>>(true, new ArrayList<>(), "Lịch thi kỳ hiện tại không có môn thi nào, lịch chưa được thêm!", examScheduleResult.getScheduleHash());	
-			}
-		}
+    private static final List<ExamEventVo> toEventDetailVos(ArrayList<ArrayList<String>> examScheduleJson) {
+	List<ExamEventVo> events = new ArrayList<>();
 
-		return new ScheduleResult<List<GoogleEvent>>(false, new ArrayList<>(), examScheduleResult.getMessage(), null);
+	for (ArrayList<String> item : examScheduleJson) {
+
+	    String subjectCode = item.get(1).toString();
+	    String subjectName = item.get(2).toString();
+	    String combined = item.get(3).toString();
+	    String examTeam = item.get(4).toString();
+	    String date = item.get(6).toString();
+	    int startSlot = Integer.parseInt(item.get(7).toString());
+	    int endSlot = startSlot + Integer.parseInt(item.get(8).toString()) - 1;
+	    String location = item.get(9).toString();
+
+	    ExamEventVo eventVo = ExamEventVo.builder()
+		    .eventId(String.format(CalendarConstant.EVENT_ID, new Date().getTime())).subjectCode(subjectCode)
+		    .subjectName(subjectName).combined(combined).examTeam(examTeam).startSlot(startSlot)
+		    .endSlot(endSlot).date(date).location(location).build();
+
+	    events.add(eventVo);
+	    System.out.println("---------------------------");
+	    System.out.println(eventVo);
+
 	}
 
-	// chuyển từ list json sang list GoogleEvent
-	private static List<GoogleEvent> toGoogleEvent(ArrayList<String> examScheduleJson) throws ParseException {
-		List<GoogleEvent> events = new ArrayList<>();
-		Gson gson = new Gson();
+	return events;
 
-		for (String json : examScheduleJson) {
-			// convert json to array
-			ArrayList item = gson.fromJson(json, ArrayList.class);
+    }
 
-			String subjectCode = item.get(1).toString();
-			String subjectName = item.get(2).toString();
-			String group = item.get(3).toString();
-			String team = item.get(4).toString();
-			String dateStr = item.get(6).toString();
-			int startSlot = Integer.parseInt(item.get(7).toString());
-			int endSlot = startSlot + Integer.parseInt(item.get(8).toString()) - 1;
-			String location = item.get(9).toString();
+    public static final List<GoogleEvent> toGoogleEvents(List<ExamEventVo> eventDetailVos) {
+	List<GoogleEvent> googleEvents = new ArrayList<GoogleEvent>();
+	for (ExamEventVo eventDetailVo : eventDetailVos) {
+	    googleEvents.add(toGoogleEvent(eventDetailVo));
+	}
+	
+	return googleEvents;
 
-			String summary = subjectName;
-			String startTimeStr = DateTimeConstant.STARTTIME.get(startSlot);
-			SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-			dateTimeFormat.setTimeZone(TimeZone.getTimeZone(CalendarConstant.TIME_ZONE));
-			Date start = dateTimeFormat.parse(dateStr + " " + startTimeStr);
-			String endTimeStr = DateTimeConstant.ENDTIME.get(endSlot);
-			Date end = dateTimeFormat.parse(dateStr + " " + endTimeStr);
-			String description = String.format(DESCRIPTION, subjectCode, group, team);
+    }
 
-			GoogleEvent event = new GoogleEvent();
-			event.setSummary(summary);
-			event.setLocation(location);
-			event.setStart(new GoogleDateTime(start, CalendarConstant.TIME_ZONE));
-			event.setEnd(new GoogleDateTime(end, CalendarConstant.TIME_ZONE));
-			event.setDescription(description);
-			// set recurrence
-			ArrayList<String> RDATE_Arr = new ArrayList<>();
-			RDATE_Arr.add(ScheduleUtils.formatyyMMddTHHmmss(start));
-			String RDATE = String.join(",", RDATE_Arr);
-			RDATE = String.format(CalendarConstant.RDATE, RDATE);
-			ArrayList<String> recurrence = new ArrayList<>();
-			recurrence.add(RDATE);
+    public static final GoogleEvent toGoogleEvent(ExamEventVo eventDetailVo) {
 
-			event.setRecurrence(recurrence);
-			events.add(event);
-		}
+	String subjectCode = eventDetailVo.getSubjectCode();
+	String subjectName = eventDetailVo.getSubjectName();
+	String combined = eventDetailVo.getCombined();
+	String examTeam = eventDetailVo.getExamTeam();
+	int startSlot = eventDetailVo.getStartSlot();
+	int endSlot = eventDetailVo.getEndSlot();
+	String date = eventDetailVo.getDate();
+	String location = eventDetailVo.getLocation();
 
-		return events;
+	String summary = getSummary(subjectName, subjectCode);
+	Date start = getStartTime(date, startSlot);
+	Date end = getEndTime(date, endSlot);
+	String description = getDescription(subjectCode, combined, examTeam);
+
+	GoogleEvent event = new GoogleEvent();
+	event.setSummary(summary);
+	event.setLocation(location);
+	event.setStart(new GoogleDateTime(start, CalendarConstant.TIME_ZONE));
+	event.setEnd(new GoogleDateTime(end, CalendarConstant.TIME_ZONE));
+	event.setDescription(description);
+
+	return event;
+
+    }
+
+    private static String getSummary(String subjectName, String subjectCode) {
+	return subjectName + ", " + subjectCode;
+    }
+
+    private static Date getStartTime(String dateStr, int startSlot) {
+	Date start = new Date();
+	String timeStr = DateTimeConstant.STARTTIME.get(startSlot);
+	// create datetime
+	SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+	dateTimeFormat.setTimeZone(TimeZone.getTimeZone(CalendarConstant.TIME_ZONE));
+
+	try {
+	    start = dateTimeFormat.parse(dateStr + " " + timeStr);
+	} catch (ParseException e) {
+	    message = "Lỗi khi parse StartTime";
+	    throw new CustomException(message);
 	}
 
-	// Lấy danh sách thời khóa biểu dạng json
-	private static ScheduleResult<ArrayList<String>> getExamSchedule(String studentId) throws IOException {
-		// Open browser
-		WebDriver driver = ScheduleUtils.openChrome();
-		//driver.manage().window().setPosition(new Point(-1000, -1000));
-		String url = String.format(ScheduleConstant.EXAM_SCHEDULE_URL, studentId);
-		driver.get(url);
+	return start;
+    }
 
-		// Get schedule
-		WebDriverWait wait = new WebDriverWait(driver, 10);
-		
-		// check update
-		if (AppUtils.isAlertPresent(driver)) {
-			Alert alert = driver.switchTo().alert();
-			// Capturing alert message.
-			String alertMessage = driver.switchTo().alert().getText();
-			// Accepting alert
-			alert.accept();
-			String message = "";
-			if (alertMessage.equals("Server đang tải lại dữ liệu. Vui lòng trở lại sau 15 phút!")) {
-				message = "Website Đào tạo đang update dữ liệu!";
-			}
-			driver.close();
-			driver.quit();
-			return new ScheduleResult<ArrayList<String>>(false, new ArrayList<String>(), message, null);
-		} else {
-			// ScheduleUtils.injectJQuery(driver, ScheduleConstant.JQUERY_FILE);
-			ScheduleUtils.injectResourceJQuery(driver, "js/MyJQuery.js");
-			JavascriptExecutor jse = ((JavascriptExecutor) driver);
-			String passCap = ScheduleUtils.readResourceFile("js/capcha.js");
-			jse.executeScript(passCap);
-			driver.navigate().to(String.format(ScheduleConstant.EXAM_SCHEDULE_URL, studentId));
-			//kiem tra neu khong vao duoc trang xem lich thi
-			
-			if(driver.findElements(By.id(ScheduleConstant.HEADER_DAOTAO_ID)).size() == 0){
-				driver.close();
-				driver.quit();
-				return new ScheduleResult<ArrayList<String>>(false, new ArrayList<String>(), "Trang đạo tạo VNUA hiện không truy cập được \nVui lòng thử lại sau!", null);
-			}
-			
-			if(driver.findElements(By.id(ScheduleConstant.LICHTHI_MSV)).size() == 0){
-				driver.close();
-				driver.quit();
-				return new ScheduleResult<ArrayList<String>>(false, new ArrayList<String>(), "Không tìm thấy thông tin giảng viên/sinh viên!", null);
-			}
-			
-			
-			// Lay lich thi
-			String code = ScheduleUtils.readResourceFile("js/getExamSchedule.js");
-			@SuppressWarnings("unchecked")
-			ArrayList<String> examScheduleJson = (ArrayList<String>) jse.executeScript(code);
+    private static Date getEndTime(String dateStr, int endSlot) {
+	Date end = new Date();
+	String timeStr = DateTimeConstant.ENDTIME.get(endSlot);
+	// create datetime
+	SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+	dateTimeFormat.setTimeZone(TimeZone.getTimeZone(CalendarConstant.TIME_ZONE));
 
-			driver.close();
-			driver.quit();
-			String examScheduleHash = AppUtils.getMD5(examScheduleJson.toString());
-			return new ScheduleResult<ArrayList<String>>(true, examScheduleJson, "Thêm lịch thi thành công!", examScheduleHash);
-		}
+	try {
+	    end = dateTimeFormat.parse(dateStr + " " + timeStr);
+	} catch (ParseException e) {
+	    message = "Lỗi khi parse StartTime";
+	    throw new CustomException(message);
 	}
+
+	return end;
+    }
+
+    private static String getDescription(String subjectCode, String combined, String examTeam) {
+	return String.format(DESCRIPTION, subjectCode, combined, examTeam);
+    }
+
+    // Lấy danh sách thời khóa biểu dạng json
+    private static ArrayList<ArrayList<String>> getExamSchedule(String studentId) {
+	// Mo trinh duyet
+	WebDriver driver;
+	try {
+	    driver = ScheduleUtils.openChrome();
+	} catch (IOException e1) {
+	    String message = "Lỗi khi mở trình duyệt Chrome";
+	    throw new CustomException(message);
+	}
+	// driver.manage().window().setPosition(new Point(-1000, -1000));
+	String url = String.format(ScheduleConstant.EXAM_SCHEDULE_URL, studentId);
+	driver.get(url);
+
+	// Get schedule
+//	WebDriverWait wait = new WebDriverWait(driver, 50);
+
+	// check update
+	if (AppUtils.isAlertPresent(driver)) {
+	    Alert alert = driver.switchTo().alert();
+	    // Capturing alert message.
+	    String alertMessage = driver.switchTo().alert().getText();
+	    // Accepting alert
+	    alert.accept();
+
+	    if (!alertMessage.equals("")) {
+		message = "Lỗi khi mở website thời khóa biểu";
+	    }
+	    if (alertMessage.equals("Server đang tải lại dữ liệu. Vui lòng trở lại sau 15 phút!")) {
+		message = "Server đang tải lại dữ liệu. Vui lòng trở lại sau 15 phút!";
+	    }
+	    driver.close();
+	    driver.quit();
+	    throw new CustomException(message);
+	}
+
+	try {
+	    ScheduleUtils.injectResourceJQuery(driver, "js/MyJQuery.js");
+	} catch (IOException e1) {
+	    driver.close();
+	    driver.quit();
+	    message = "Lỗi khi inject Jquery";
+	    throw new CustomException(message);
+	}
+	JavascriptExecutor jse = ((JavascriptExecutor) driver);
+	String passCap;
+	try {
+	    passCap = ScheduleUtils.readResourceFile("js/capcha.js");
+	} catch (IOException e1) {
+	    driver.close();
+	    driver.quit();
+	    message = "Lỗi khi đọc rile chapcha.js";
+	    throw new CustomException(message);
+	}
+	jse.executeScript(passCap);
+	driver.navigate().to(url);
+	// check thong tin sinh vien
+	// wait.until(ExpectedConditions.presenceOfElementLocated(By.id(ScheduleConstant.CONTENT_MSV)));
+	if (driver.findElements(By.id(ScheduleConstant.HEADER_DAOTAO_ID)).size() == 0) {
+	    driver.close();
+	    driver.quit();
+	    message = "Trang đạo tạo VNUA hiện không truy cập được \\nVui lòng thử lại sau!";
+	    throw new CustomException(message);
+	}
+
+	if (driver.findElements(By.id(ScheduleConstant.LICHTHI_MSV)).size() == 0) {
+	    driver.close();
+	    driver.quit();
+	    message = "Không tìm thấy thông tin lịch thi sinh viên";
+	    throw new CustomException(message);
+	}
+
+	// Lay lich thi
+	String code;
+	try {
+	    code = ScheduleUtils.readResourceFile("js/getExamSchedule.js");
+	} catch (IOException e) {
+	    driver.close();
+	    driver.quit();
+	    message = "Lỗi khi đọc file getExamSchedule.js";
+	    throw new CustomException(message);
+	}
+	@SuppressWarnings("unchecked")
+	ArrayList<ArrayList<String>> examScheduleJson = (ArrayList<ArrayList<String>>) jse.executeScript(code);
+
+	driver.close();
+	driver.quit();
+//	String examScheduleHash = AppUtils.getMD5(examScheduleJson.toString());
+	return examScheduleJson;
+    }
 }
